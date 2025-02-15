@@ -28,7 +28,7 @@ const UsersState = {
 const io = new Server(expressServer, {
   cors: {
     origin:
-      process.env.NODE_ENV === "production"
+      process.env.NODE_ENV === "Production"
         ? false
         : "https://chat-app-phi-rouge-79.vercel.app/",
   },

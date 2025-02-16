@@ -1,12 +1,7 @@
 // Connect to the backend
-const socket = io(
-  true === true
-    ? "https://chat-serv-luzamaxxps-projects.vercel.app/" // Replace with your Vercel backend URL
-    : "https://chat-serv-luzamaxxps-projects.vercel.app/",
-  {
-    transports: ["websocket", "polling"],
-  }
-);
+const socket = io("https://your-backend.vercel.app", {
+  transports: ["websocket", "polling"],
+});
 
 // DOM Elements
 const msgInput = document.querySelector("#message");

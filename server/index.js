@@ -27,7 +27,7 @@ const UsersState = {
 // Socket.IO setup with CORS configuration for Vercel
 const io = new Server(server, {
   cors: {
-    origin: ["*"], // Update with your frontend domain
+    origin: "*", // Update with your frontend domain
 
     methods: ["GET", "POST"],
     credentials: true,

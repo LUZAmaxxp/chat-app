@@ -2,7 +2,7 @@
 const socket = io(
   process.env.NODE_ENV === "production"
     ? "https://chat-app-rouge-five.vercel.app" // Replace with your Vercel backend URL
-    : "http://localhost:3500",
+    : "https://chat-app-rouge-five.vercel.app",
   {
     transports: ["websocket", "polling"],
   }

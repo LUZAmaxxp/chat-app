@@ -27,7 +27,7 @@ const UsersState = {
 
 const io = new Server(expressServer, {
   cors: {
-    origin: process.env.FRONTEND_URL || "*", // Allow requests from frontend
+    origin: "*", // Allow requests from frontend
     methods: ["GET", "POST"],
   },
 });

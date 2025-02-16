@@ -1,9 +1,14 @@
+// Connect to the backend
 const socket = io(
-  process.env.NODE_ENV === "production"
-    ? "https://chat-serv.vercel.app/" // Your Vercel backend URL
-    : "ws://localhost:3500"
+  true === true
+    ? "https://chat-serv-luzamaxxps-projects.vercel.app/" // Replace with your Vercel backend URL
+    : "https://chat-serv-luzamaxxps-projects.vercel.app/",
+  {
+    transports: ["websocket", "polling"],
+  }
 );
 
+// DOM Elements
 const msgInput = document.querySelector("#message");
 const nameInput = document.querySelector("#name");
 const chatRoom = document.querySelector("#room");
@@ -12,6 +17,7 @@ const usersList = document.querySelector(".user-list");
 const roomList = document.querySelector(".room-list");
 const chatDisplay = document.querySelector(".chat-display");
 
+// Send Message
 function sendMessage(e) {
   e.preventDefault();
   if (nameInput.value && msgInput.value && chatRoom.value) {
@@ -24,6 +30,7 @@ function sendMessage(e) {
   msgInput.focus();
 }
 
+// Enter Room
 function enterRoom(e) {
   e.preventDefault();
   if (nameInput.value && chatRoom.value) {
@@ -34,58 +41,67 @@ function enterRoom(e) {
   }
 }
 
+// Event Listeners
 document.querySelector(".form-msg").addEventListener("submit", sendMessage);
-
 document.querySelector(".form-join").addEventListener("submit", enterRoom);
 
+// Typing Activity
+let activityTimer;
 msgInput.addEventListener("keypress", () => {
   socket.emit("activity", nameInput.value);
 });
 
-// Listen for messages
+// Socket event listeners
 socket.on("message", (data) => {
   activity.textContent = "";
   const { name, text, time } = data;
   const li = document.createElement("li");
   li.className = "post";
+
   if (name === nameInput.value) li.className = "post post--left";
   if (name !== nameInput.value && name !== "Admin")
     li.className = "post post--right";
+
   if (name !== "Admin") {
-    li.innerHTML = `<div class="post__header ${
-      name === nameInput.value ? "post__header--user" : "post__header--reply"
-    }">
-        <span class="post__header--name">${name}</span> 
-        <span class="post__header--time">${time}</span> 
-        </div>
-        <div class="post__text">${text}</div>`;
+    li.innerHTML = `
+            <div class="post__header ${
+              name === nameInput.value
+                ? "post__header--user"
+                : "post__header--reply"
+            }">
+                <span class="post__header--name">${name}</span>
+                <span class="post__header--time">${time}</span>
+            </div>
+            <div class="post__text">${text}</div>
+        `;
   } else {
     li.innerHTML = `<div class="post__text">${text}</div>`;
   }
-  document.querySelector(".chat-display").appendChild(li);
 
+  chatDisplay.appendChild(li);
   chatDisplay.scrollTop = chatDisplay.scrollHeight;
 });
 
-let activityTimer;
+// Activity indicator
 socket.on("activity", (name) => {
   activity.textContent = `${name} is typing...`;
-
-  // Clear after 3 seconds
   clearTimeout(activityTimer);
   activityTimer = setTimeout(() => {
     activity.textContent = "";
   }, 3000);
 });
 
+// User list update
 socket.on("userList", ({ users }) => {
   showUsers(users);
 });
 
+// Room list update
 socket.on("roomList", ({ rooms }) => {
   showRooms(rooms);
 });
 
+// Helper functions
 function showUsers(users) {
   usersList.textContent = "";
   if (users) {

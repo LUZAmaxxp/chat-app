@@ -7,7 +7,7 @@ import http from "http";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PORT = 3500;
+const PORT = process.env.PORT || 3500;
 const ADMIN = "Admin";
 
 const app = express();
@@ -27,8 +27,10 @@ const UsersState = {
 // Socket.IO setup with CORS configuration for Vercel
 const io = new Server(server, {
   cors: {
-    origin: "*", // Update with your frontend domain
-
+    origin:
+      process.env.NODE_ENV === "production"
+        ? ["https://0lheedra.vercel.app"] // Update with your frontend domain
+        : ["http://localhost:3000", "http://127.0.0.1:5500"],
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -167,9 +169,11 @@ function getAllActiveRooms() {
 }
 
 // Start server
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== "production") {
+  server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
 
 // Export for Vercel
 export default app;

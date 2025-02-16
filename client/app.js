@@ -1,5 +1,5 @@
 // Connect to the backend
-const socket = io("https://chat-app-rouge-five.vercel.app/", {
+const socket = io("https://server-qmzojcs1l-luzamaxxps-projects.vercel.app", {
   transports: ["websocket", "polling"],
 });
 

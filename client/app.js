@@ -1,5 +1,5 @@
 const socket = io("https://chat-app-nine-peach.vercel.app/", {
-  transports: ["websocket", "polling"],
+  transports: ["websocket"],
 });
 
 const msgInput = document.querySelector("#message");

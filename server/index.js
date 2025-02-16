@@ -7,7 +7,7 @@ import http from "http";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PORT = process.env.PORT || 3500;
+const PORT = 3500;
 const ADMIN = "Admin";
 
 const app = express();
@@ -27,8 +27,7 @@ const UsersState = {
 // Socket.IO setup with CORS configuration for Vercel
 const io = new Server(server, {
   cors: {
-    origin: ["https://chat-mauve-alpha.vercel.app"], // Update with your frontend domain
-
+    origin: "*", // Allow all origins
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -167,11 +166,9 @@ function getAllActiveRooms() {
 }
 
 // Start server
-if (process.env.NODE_ENV !== "production") {
-  server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 // Export for Vercel
 export default app;

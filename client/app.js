@@ -1,7 +1,7 @@
 const socket = io(
   process.env.NODE_ENV === "production"
     ? "https://chat-serv.vercel.app/" // Your Vercel backend URL
-    : "https://chat-serv.vercel.app/"
+    : "ws://localhost:3500"
 );
 
 const msgInput = document.querySelector("#message");

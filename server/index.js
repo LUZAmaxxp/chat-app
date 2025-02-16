@@ -29,8 +29,12 @@ const io = new Server(server, {
   cors: {
     origin:
       process.env.NODE_ENV === "production"
-        ? ["https://0lheedra.vercel.app"] // Update with your frontend domain
-        : ["http://localhost:3000", "http://127.0.0.1:5500"],
+        ? ["https://chat-mauve-alpha.vercel.app"] // Update with your frontend domain
+        : [
+            "http://localhost:3000",
+            "http://127.0.0.1:5500",
+            "https://chat-mauve-alpha.vercel.app",
+          ],
     methods: ["GET", "POST"],
     credentials: true,
   },

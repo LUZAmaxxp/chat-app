@@ -34,12 +34,12 @@ const io = new Server(server, {
 });
 
 // Middleware to handle Vercel's serverless environment
-app.use((req, res, next) => {
+export const handler = (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  next();
-});
+  res.status(200).json({ status: "ok" });
+};
 
 // Basic health check endpoint
 app.get("/api/health", (req, res) => {

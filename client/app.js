@@ -1,6 +1,4 @@
-const socket = io("https://chat-app-nine-peach.vercel.app/", {
-  transports: ["websocket"],
-});
+const socket = io("wss://chat-app-nine-peach.vercel.app/", {});
 
 const msgInput = document.querySelector("#message");
 const nameInput = document.querySelector("#name");

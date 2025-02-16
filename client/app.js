@@ -1,4 +1,4 @@
-const socket = io("wss://your-backend-url.vercel.app");
+const socket = io("wss://chat-app-nine-peach.vercel.app");
 
 const msgInput = document.querySelector("#message");
 const nameInput = document.querySelector("#name");

@@ -1,4 +1,8 @@
-const socket = io(import.meta.env.VITE_SOCKET_URL);
+const socket = io(
+  process.env.NODE_ENV === "production"
+    ? "https://chat-serv.vercel.app/" // Your Vercel backend URL
+    : "https://chat-serv.vercel.app/"
+);
 
 const msgInput = document.querySelector("#message");
 const nameInput = document.querySelector("#name");

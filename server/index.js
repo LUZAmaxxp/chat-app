@@ -27,7 +27,7 @@ const UsersState = {
 
 const io = new Server(expressServer, {
   cors: {
-    origin: "*", // Allow requests from frontend
+    origin: "https://chat-io-orpin.vercel.app", // Allow requests from frontend
     methods: ["GET", "POST"],
   },
 });

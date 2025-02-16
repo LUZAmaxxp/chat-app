@@ -27,7 +27,7 @@ const UsersState = {
 
 const io = new Server(expressServer, {
   cors: {
-    origin: "*",
+    origin: "https://chat-cl.vercel.app",
   },
 });
 

@@ -1,7 +1,7 @@
 // Connect to the backend
 const socket = io(
   process.env.NODE_ENV === "production"
-    ? "https://your-backend-url.vercel.app" // Replace with your Vercel backend URL
+    ? "https://olheedra.vercel.app" // Replace with your Vercel backend URL
     : "http://localhost:3500",
   {
     transports: ["websocket", "polling"],

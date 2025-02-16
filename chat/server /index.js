@@ -2,6 +2,7 @@ import express from "express";
 import { Server } from "socket.io";
 import path from "path";
 import { fileURLToPath } from "url";
+import http from "http";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,14 +11,12 @@ const PORT = process.env.PORT || 3500;
 const ADMIN = "Admin";
 
 const app = express();
+const server = http.createServer(app);
 
+// Setup static files serving
 app.use(express.static(path.join(__dirname, "public")));
 
-const expressServer = app.listen(PORT, () => {
-  console.log(`listening on port ${PORT}`);
-});
-
-// state
+// State management
 const UsersState = {
   users: [],
   setUsers: function (newUsersArray) {
@@ -25,23 +24,40 @@ const UsersState = {
   },
 };
 
-const io = new Server(expressServer, {
+// Socket.IO setup with CORS configuration for Vercel
+const io = new Server(server, {
   cors: {
     origin:
-      process.env.NODE_ENV === "Production"
-        ? false
-        : "https://chat-app-phi-rouge-79.vercel.app/",
+      process.env.NODE_ENV === "production"
+        ? ["https://your-frontend-domain.vercel.app"] // Update with your frontend domain
+        : ["http://localhost:3000", "http://127.0.0.1:5500"],
+    methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
+// Middleware to handle Vercel's serverless environment
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
+
+// Basic health check endpoint
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
+// Socket.IO connection handling
 io.on("connection", (socket) => {
   console.log(`User ${socket.id} connected`);
 
-  // Upon connection - only to user
+  // Welcome message
   socket.emit("message", buildMsg(ADMIN, "Welcome to Chat App!"));
 
+  // Room handling
   socket.on("enterRoom", ({ name, room }) => {
-    // leave previous room
     const prevRoom = getUser(socket.id)?.room;
 
     if (prevRoom) {
@@ -54,39 +70,31 @@ io.on("connection", (socket) => {
 
     const user = activateUser(socket.id, name, room);
 
-    // Cannot update previous room users list until after the state update in activate user
     if (prevRoom) {
       io.to(prevRoom).emit("userList", {
         users: getUsersInRoom(prevRoom),
       });
     }
 
-    // join room
     socket.join(user.room);
-
-    // To user who joined
     socket.emit(
       "message",
       buildMsg(ADMIN, `You have joined the ${user.room} chat room`)
     );
-
-    // To everyone else
     socket.broadcast
       .to(user.room)
       .emit("message", buildMsg(ADMIN, `${user.name} has joined the room`));
 
-    // Update user list for room
     io.to(user.room).emit("userList", {
       users: getUsersInRoom(user.room),
     });
 
-    // Update rooms list for everyone
     io.emit("roomList", {
       rooms: getAllActiveRooms(),
     });
   });
 
-  // When user disconnects - to all others
+  // Disconnect handling
   socket.on("disconnect", () => {
     const user = getUser(socket.id);
     userLeavesApp(socket.id);
@@ -96,20 +104,16 @@ io.on("connection", (socket) => {
         "message",
         buildMsg(ADMIN, `${user.name} has left the room`)
       );
-
       io.to(user.room).emit("userList", {
         users: getUsersInRoom(user.room),
       });
-
       io.emit("roomList", {
         rooms: getAllActiveRooms(),
       });
     }
-
-    console.log(`User ${socket.id} disconnected`);
   });
 
-  // Listening for a message event
+  // Message handling
   socket.on("message", ({ name, text }) => {
     const room = getUser(socket.id)?.room;
     if (room) {
@@ -117,7 +121,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  // Listen for activity
+  // Activity handling
   socket.on("activity", (name) => {
     const room = getUser(socket.id)?.room;
     if (room) {
@@ -126,6 +130,7 @@ io.on("connection", (socket) => {
   });
 });
 
+// Helper functions
 function buildMsg(name, text) {
   return {
     name,
@@ -138,7 +143,6 @@ function buildMsg(name, text) {
   };
 }
 
-// User functions
 function activateUser(id, name, room) {
   const user = { id, name, room };
   UsersState.setUsers([
@@ -163,3 +167,13 @@ function getUsersInRoom(room) {
 function getAllActiveRooms() {
   return Array.from(new Set(UsersState.users.map((user) => user.room)));
 }
+
+// Start server
+if (process.env.NODE_ENV !== "production") {
+  server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+// Export for Vercel
+export default app;

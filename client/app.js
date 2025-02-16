@@ -1,4 +1,4 @@
-const socket = io("wss://chat-app-nine-peach.vercel.app/", {});
+const socket = io("wss://chatapi-wrob.onrender.com", {});
 
 const msgInput = document.querySelector("#message");
 const nameInput = document.querySelector("#name");

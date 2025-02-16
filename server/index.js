@@ -27,14 +27,8 @@ const UsersState = {
 // Socket.IO setup with CORS configuration for Vercel
 const io = new Server(server, {
   cors: {
-    origin:
-      process.env.NODE_ENV === "production"
-        ? ["https://chat-mauve-alpha.vercel.app"] // Update with your frontend domain
-        : [
-            "http://localhost:3000",
-            "http://127.0.0.1:5500",
-            "https://chat-mauve-alpha.vercel.app",
-          ],
+    origin: ["https://chat-mauve-alpha.vercel.app"], // Update with your frontend domain
+
     methods: ["GET", "POST"],
     credentials: true,
   },

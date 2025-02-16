@@ -27,7 +27,7 @@ const UsersState = {
 // Socket.IO setup with CORS configuration for Vercel
 const io = new Server(server, {
   cors: {
-    origin: "https://client-bay-nine.vercel.app", // Allow all origins
+    origin: "https://client-bay-nine.vercel.app/", // Allow all origins
     methods: ["GET", "POST"],
     credentials: true,
   },

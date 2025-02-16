@@ -27,19 +27,20 @@ const UsersState = {
 // Socket.IO setup with CORS configuration for Vercel
 const io = new Server(server, {
   cors: {
-    origin: "https://client-bay-nine.vercel.app/", // Allow all origins
+    origin: ["*"], // Update with your frontend domain
+
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
 
 // Middleware to handle Vercel's serverless environment
-export const handler = (req, res) => {
+app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.status(200).json({ status: "ok" });
-};
+  next();
+});
 
 // Basic health check endpoint
 app.get("/api/health", (req, res) => {

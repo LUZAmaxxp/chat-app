@@ -1,0 +1,359 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: #0a1014;
+  padding: 2rem;
+  color: #e9edef;
+}
+
+h1,
+h2 {
+  color: #e9edef;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  position: relative;
+  display: inline-block;
+}
+
+h1::after,
+h2::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #00a884;
+  transform: scaleX(0);
+  animation: expandLine 0.6s ease-out forwards;
+}
+
+@keyframes expandLine {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Search Section */
+div:first-of-type {
+  display: flex;
+  gap: 1rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 0.8rem 1.2rem;
+  background: #222e35;
+  border: 1px solid #435058;
+  border-radius: 12px;
+  color: #e9edef;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #00a884;
+  box-shadow: 0 0 0 2px rgba(0, 168, 132, 0.2);
+}
+
+button {
+  padding: 0.8rem 1.5rem;
+  background: #00a884;
+  border: none;
+  border-radius: 12px;
+  color: #e9edef;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  transition: transform 0.6s ease;
+}
+
+button:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Friends List */
+#friendsList {
+  list-style: none;
+  max-width: 600px;
+  margin: 0 auto;
+  background: #222e35;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#friendsList li {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #435058;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  animation: slideIn 0.3s ease-out forwards;
+  position: relative;
+  background: #222e35;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+#friendsList li:hover {
+  background: #2a3942;
+  padding-left: 2rem;
+}
+
+#friendsList li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: #00a884;
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+#friendsList li:hover::before {
+  transform: scaleY(1);
+}
+
+/* Chat Section */
+select {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 1rem;
+  display: block;
+  padding: 0.8rem 1.2rem;
+  background: #222e35;
+  border: 1px solid #435058;
+  border-radius: 12px;
+  color: #e9edef;
+  font-size: 1rem;
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+select:focus {
+  outline: none;
+  border-color: #00a884;
+  box-shadow: 0 0 0 2px rgba(0, 168, 132, 0.2);
+}
+
+/* Custom dropdown arrow */
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23e9edef' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px;
+}
+
+/* Chat Button */
+#friendSelect + button {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Loading animation */
+button.loading {
+  color: transparent;
+}
+
+button.loading::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+
+  div:first-of-type {
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+.intro-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #00a884;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 1000;
+  animation: introFade 3s ease-in-out forwards;
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  opacity: 0;
+  animation: logoAppear 0.5s ease-out 0.5s forwards,
+    logoFade 0.5s ease-out 2s forwards;
+}
+.logo-text {
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: textAppear 0.5s ease-out 0.8s forwards,
+    textFade 0.5s ease-out 2s forwards;
+}
+.logo-text h1 {
+  color: white;
+  font-size: 2em;
+  margin-bottom: 8px;
+}
+.logo-text p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1em;
+}
+@keyframes textAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes textFade {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+/* Intro Animation Keyframes */
+@keyframes introFade {
+  0% {
+    opacity: 1;
+    visibility: visible;
+  }
+  80% {
+    opacity: 1;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes logoAppear {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes logoFade {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* Modify main container animation */
+main {
+  background: #fff;
+  width: 90%;
+  max-width: 800px;
+  height: 90vh;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  opacity: 0;
+  animation: mainAppear 0.5s ease-out 2.5s forwards;
+}
+
+@keyframes mainAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

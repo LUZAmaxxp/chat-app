@@ -97,9 +97,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                   }),
                 }
               );
-              if (!response.ok) {
-                throw new Error(response.statusText);
-              } else {
+              if (response.status == 400) {
+                alert("Friend request already sent!");
+              } else if (response.status == 200) {
                 alert("Friend request sent!");
               }
             } catch (error) {

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Find Friends</title>
     <link rel="stylesheet" href="friend.css" />
+    <link rel="stylesheet" href="popup.css" />
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
   </head>
   <body>
@@ -22,10 +23,10 @@
       <h3>Your Friends</h3>
       <ul id="friends-list"></ul>
     </div>
-    <div id="popup-modal" class="modal">
-      <div class="modal-content">
-        <span class="close-btn">&times;</span>
+    <div id="popup-modal" class="popup">
+      <div class="popup-content">
         <p id="popup-message"></p>
+        <button class="popup-close">OK</button>
       </div>
     </div>
 

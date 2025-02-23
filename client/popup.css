@@ -1,29 +1,50 @@
-.modal {
-  display: none;
+/* Popup Base */
+.popup {
   position: fixed;
-  z-index: 1000;
-  left: 50%;
   top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  width: 300px;
-  background: white;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+  background: rgba(20, 20, 20, 0.9);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 10px;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   text-align: center;
+  z-index: 1000;
+  min-width: 280px;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
-.modal-content {
-  padding: 10px;
-}
-
-.close-btn {
-  cursor: pointer;
-  float: right;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.modal.show {
+/* Active (Show) State */
+.popup.show {
   display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Popup Content */
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Close Button */
+.popup-close {
+  background: #ff4757;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.popup-close:hover {
+  background: #e84118;
 }

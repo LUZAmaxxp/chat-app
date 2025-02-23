@@ -205,16 +205,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 function showPopup(message) {
   const popup = document.getElementById("popup-modal");
   const messageBox = document.getElementById("popup-message");
-  const closeButton = document.querySelector(".close-btn");
+  const closeButton = document.querySelector(".popup-close");
 
   messageBox.textContent = message;
   popup.classList.add("show");
 
+  // Hide on button click
   closeButton.onclick = () => {
     popup.classList.remove("show");
   };
 
+  // Auto-hide after 3 seconds
   setTimeout(() => {
     popup.classList.remove("show");
-  }, 3000); // Auto-hide after 3 seconds
+  }, 3000);
 }

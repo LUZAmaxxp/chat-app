@@ -1,6 +1,4 @@
-const socket = io("https://chatapi-wrob.onrender.com", {
-  withCredentials: true,
-});
+const socket = io("wss://chatapi-wrob.onrender.com");
 
 // Signup Logic
 document.addEventListener("DOMContentLoaded", () => {

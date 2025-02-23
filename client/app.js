@@ -111,6 +111,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           li.appendChild(addBtn);
           resultsList.appendChild(li);
+        } else {
+          showPopup("No users found!");
         }
       });
     });

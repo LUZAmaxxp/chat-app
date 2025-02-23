@@ -103,8 +103,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const response = await fetch(
       `https://chatapi-wrob.onrender.com/friend-requests/${userId}`
     );
-    const friendRequests = response.json();
-    console.log(friendRequests);
+    const friendRequests = await response.json();
+    console.log("Friend Requests for user:", user.friendRequests);
+
     friendRequestsList.innerHTML = "";
 
     friendRequests.forEach((friend) => {

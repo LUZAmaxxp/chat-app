@@ -89,26 +89,35 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Load Friends List
-  const friendsList = document.getElementById("friends-list");
-  if (friendsList) {
-    (async () => {
-      const response = await fetch(
-        `https://chatapi-wrob.onrender.com/friends?userId=${localStorage.getItem(
-          "userId"
-        )}`
-      );
-      const friends = await response.json();
-      friends.forEach((friend) => {
-        const li = document.createElement("li");
-        li.textContent = friend.username;
-        li.onclick = () => {
-          localStorage.setItem("chatFriendId", friend._id);
-          localStorage.setItem("chatFriendName", friend.username);
-          window.location.href = "chat.html";
-        };
-        friendsList.appendChild(li);
-      });
-    })();
+  const userId = localStorage.getItem("userId");
+  const friendRequestsList = document.getElementById("friend-requests");
+
+  if (friendRequestsList) {
+    const response = fetch(
+      `https://chatapi-wrob.onrender.com/friend-requests/${userId}`
+    );
+    const friendRequests = response.json();
+    friendRequestsList.innerHTML = "";
+
+    friendRequests.forEach((friend) => {
+      const li = document.createElement("li");
+      li.textContent = friend.username;
+
+      const acceptBtn = document.createElement("button");
+      acceptBtn.textContent = "Accept";
+      acceptBtn.onclick = async () => {
+        await fetch("https://chatapi-wrob.onrender.com/accept-request", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, friendId: friend._id }),
+        });
+        alert("Friend request accepted!");
+        location.reload();
+      };
+
+      li.appendChild(acceptBtn);
+      friendRequestsList.appendChild(li);
+    });
   }
 
   // Chat Page Logic

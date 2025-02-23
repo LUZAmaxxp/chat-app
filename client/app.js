@@ -1,109 +1,152 @@
-const socket = io("wss://chatapi-wrob.onrender.com", {});
+const socket = io("wss://chatapi-wrob.onrender.com");
 
-const msgInput = document.querySelector("#message");
-const nameInput = document.querySelector("#name");
-const chatRoom = document.querySelector("#room");
-const activity = document.querySelector(".activity");
-const usersList = document.querySelector(".user-list");
-const roomList = document.querySelector(".room-list");
-const chatDisplay = document.querySelector(".chat-display");
+// Signup Logic
+document.addEventListener("DOMContentLoaded", () => {
+  const signupForm = document.getElementById("signup-form");
+  if (signupForm) {
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-function sendMessage(e) {
-  e.preventDefault();
-  if (nameInput.value && msgInput.value && chatRoom.value) {
-    socket.emit("message", {
-      name: nameInput.value,
-      text: msgInput.value,
-    });
-    msgInput.value = "";
-  }
-  msgInput.focus();
-}
+      const response = await fetch("https://chatapi-wrob.onrender.com/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password }),
+      });
 
-function enterRoom(e) {
-  e.preventDefault();
-  if (nameInput.value && chatRoom.value) {
-    socket.emit("enterRoom", {
-      name: nameInput.value,
-      room: chatRoom.value,
-    });
-  }
-}
-
-document.querySelector(".form-msg").addEventListener("submit", sendMessage);
-
-document.querySelector(".form-join").addEventListener("submit", enterRoom);
-
-msgInput.addEventListener("keypress", () => {
-  socket.emit("activity", nameInput.value);
-});
-
-// Listen for messages
-socket.on("message", (data) => {
-  activity.textContent = "";
-  const { name, text, time } = data;
-  const li = document.createElement("li");
-  li.className = "post";
-  if (name === nameInput.value) li.className = "post post--left";
-  if (name !== nameInput.value && name !== "Admin")
-    li.className = "post post--right";
-  if (name !== "Admin") {
-    li.innerHTML = `<div class="post__header ${
-      name === nameInput.value ? "post__header--user" : "post__header--reply"
-    }">
-        <span class="post__header--name">${name}</span> 
-        <span class="post__header--time">${time}</span> 
-        </div>
-        <div class="post__text">${text}</div>`;
-  } else {
-    li.innerHTML = `<div class="post__text">${text}</div>`;
-  }
-  document.querySelector(".chat-display").appendChild(li);
-
-  chatDisplay.scrollTop = chatDisplay.scrollHeight;
-});
-
-let activityTimer;
-socket.on("activity", (name) => {
-  activity.textContent = `${name} is typing...`;
-
-  // Clear after 3 seconds
-  clearTimeout(activityTimer);
-  activityTimer = setTimeout(() => {
-    activity.textContent = "";
-  }, 3000);
-});
-
-socket.on("userList", ({ users }) => {
-  showUsers(users);
-});
-
-socket.on("roomList", ({ rooms }) => {
-  showRooms(rooms);
-});
-
-function showUsers(users) {
-  usersList.textContent = "";
-  if (users) {
-    usersList.innerHTML = `<em>Users in ${chatRoom.value}:</em>`;
-    users.forEach((user, i) => {
-      usersList.textContent += ` ${user.name}`;
-      if (users.length > 1 && i !== users.length - 1) {
-        usersList.textContent += ",";
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem("userId", data.userId);
+        window.location.href = "friends.html";
+      } else {
+        alert(data.error);
       }
     });
   }
-}
+  const loginForm = document.getElementById("login-form");
 
-function showRooms(rooms) {
-  roomList.textContent = "";
-  if (rooms) {
-    roomList.innerHTML = "<em>Active Rooms:</em>";
-    rooms.forEach((room, i) => {
-      roomList.textContent += ` ${room}`;
-      if (rooms.length > 1 && i !== rooms.length - 1) {
-        roomList.textContent += ",";
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value;
+
+      const response = await fetch("https://chatapi-wrob.onrender.com/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem("userId", data.userId);
+        window.location.href = "friends.html"; // Redirect to friends page
+      } else {
+        alert("Invalid email or password. Please try again.");
       }
     });
   }
-}
+
+  // Search Friends
+  const searchBtn = document.getElementById("search-btn");
+  if (searchBtn) {
+    searchBtn.addEventListener("click", async () => {
+      const query = document.getElementById("search-input").value;
+      const response = await fetch(
+        `https://chatapi-wrob.onrender.com/search?username=${query}`
+      );
+      const users = await response.json();
+
+      const resultsList = document.getElementById("search-results");
+      resultsList.innerHTML = "";
+      users.forEach((user) => {
+        const li = document.createElement("li");
+        li.textContent = user.username;
+        const addBtn = document.createElement("button");
+        addBtn.textContent = "Add Friend";
+        addBtn.onclick = async () => {
+          await fetch("https://chatapi-wrob.onrender.com/add-friend", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              userId: localStorage.getItem("userId"),
+              friendId: user._id,
+            }),
+          });
+          alert("Friend request sent!");
+        };
+        li.appendChild(addBtn);
+        resultsList.appendChild(li);
+      });
+    });
+  }
+
+  // Load Friends List
+  const friendsList = document.getElementById("friends-list");
+  if (friendsList) {
+    (async () => {
+      const response = await fetch(
+        `https://chatapi-wrob.onrender.com/friends?userId=${localStorage.getItem(
+          "userId"
+        )}`
+      );
+      const friends = await response.json();
+      friends.forEach((friend) => {
+        const li = document.createElement("li");
+        li.textContent = friend.username;
+        li.onclick = () => {
+          localStorage.setItem("chatFriendId", friend._id);
+          localStorage.setItem("chatFriendName", friend.username);
+          window.location.href = "chat.html";
+        };
+        friendsList.appendChild(li);
+      });
+    })();
+  }
+
+  // Chat Page Logic
+  const chatForm = document.getElementById("chat-form");
+  if (chatForm) {
+    document.getElementById("friend-name").textContent +=
+      localStorage.getItem("chatFriendName");
+    const chatDisplay = document.querySelector(".chat-display");
+    const userId = localStorage.getItem("userId");
+    const friendId = localStorage.getItem("chatFriendId");
+
+    socket.emit("joinChat", { userId, friendId });
+
+    socket.on("chatHistory", (messages) => {
+      chatDisplay.innerHTML = "";
+      messages.forEach((msg) => {
+        const div = document.createElement("div");
+        div.className = msg.sender === userId ? "my-message" : "friend-message";
+        div.textContent = msg.text;
+        chatDisplay.appendChild(div);
+      });
+      chatDisplay.scrollTop = chatDisplay.scrollHeight;
+    });
+
+    chatForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const msgInput = document.getElementById("message-input");
+      if (msgInput.value.trim()) {
+        socket.emit("privateMessage", {
+          sender: userId,
+          receiver: friendId,
+          text: msgInput.value,
+        });
+        msgInput.value = "";
+      }
+    });
+
+    socket.on("privateMessage", (msg) => {
+      const div = document.createElement("div");
+      div.className = msg.sender === userId ? "my-message" : "friend-message";
+      div.textContent = msg.text;
+      chatDisplay.appendChild(div);
+      chatDisplay.scrollTop = chatDisplay.scrollHeight;
+    });
+  }
+});

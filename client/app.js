@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           localStorage.setItem("token", data.token); // Save token instead of userId
           window.location.href = "friends.html";
         } else {
-          alert(data.error);
+          showPopup(data.error);
         }
       } catch (error) {
         console.error("Network error:", error);
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         localStorage.setItem("token", data.token); // Save token
         window.location.href = "friends.html"; // Redirect to friends page
       } else {
-        alert("Invalid email or password. Please try again.");
+        showPopup("Invalid email or password. Please try again.");
         console.log(data.error);
       }
     });
@@ -98,9 +98,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
               );
               if (response.status == 400) {
-                alert("Friend request already sent!");
+                showPopup("Friend request already sent!");
               } else if (response.status == 200) {
-                alert("Friend request sent!");
+                showPopup("Friend request sent!");
               }
             } catch (error) {
               console.error("Failed to send friend request:", error);
@@ -202,3 +202,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 });
+function showPopup(message) {
+  const popup = document.getElementById("popup-modal");
+  const messageBox = document.getElementById("popup-message");
+  const closeButton = document.querySelector(".close-btn");
+
+  messageBox.textContent = message;
+  popup.classList.add("show");
+
+  closeButton.onclick = () => {
+    popup.classList.remove("show");
+  };
+
+  setTimeout(() => {
+    popup.classList.remove("show");
+  }, 3000); // Auto-hide after 3 seconds
+}

@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
         const data = await response.json();
         if (response.ok) {
+          localStorage.setItem("token", data.token); // Save token instead of userId
           window.location.href = "friends.html";
         } else {
           alert(data.error);
@@ -50,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem("userId", data.userId);
+        localStorage.setItem("token", data.token); // Save token
         window.location.href = "friends.html"; // Redirect to friends page
       } else {
         alert("Invalid email or password. Please try again.");
@@ -65,7 +66,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     searchBtn.addEventListener("click", async () => {
       const query = document.getElementById("search-input").value;
       const response = await fetch(
-        `https://chatapi-wrob.onrender.com/search?username=${query}`
+        "https://chatapi-wrob.onrender.com/search?username=" + query,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
       const users = await response.json();
 
@@ -78,16 +82,20 @@ document.addEventListener("DOMContentLoaded", async () => {
           const addBtn = document.createElement("button");
           addBtn.textContent = "Add Friend";
           addBtn.onclick = async () => {
-            await fetch("https://chatapi-wrob.onrender.com/add-friend", {
+            await fetch("https://chatapi-wrob.onrender.com/send-request", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token
+              },
               body: JSON.stringify({
-                userId: localStorage.getItem("userId"),
-                friendId: user._id,
+                senderId: localStorage.getItem("userId"),
+                receiverId: user._id,
               }),
             });
             alert("Friend request sent!");
           };
+
           li.appendChild(addBtn);
           resultsList.appendChild(li);
         }
@@ -101,8 +109,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (friendRequestsList) {
     const response = await fetch(
-      `https://chatapi-wrob.onrender.com/friend-requests/${userId}`
+      "https://chatapi-wrob.onrender.com/friend-requests/" + userId,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
     );
+
+    if (!response.ok) {
+      console.error("Failed to fetch friend requests:", response.statusText);
+      return;
+    }
     const friendRequests = await response.json();
     console.log("Friend Requests for user:", user.friendRequests);
 

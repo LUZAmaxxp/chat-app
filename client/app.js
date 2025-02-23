@@ -220,3 +220,11 @@ function showPopup(message) {
     popup.classList.remove("show");
   }, 3000);
 }
+// For dark theme
+document.querySelector(".popup").classList.add("dark-theme");
+
+// For success message
+document.querySelector(".popup").classList.add("success");
+
+// For error message
+document.querySelector(".popup").classList.add("error");

@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "friends.html"; // Redirect to friends page
       } else {
         alert("Invalid email or password. Please try again.");
+        console.log(data.error);
       }
     });
   }

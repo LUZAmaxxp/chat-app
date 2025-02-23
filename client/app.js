@@ -4,7 +4,7 @@ const socket = io("https://chatapi-wrob.onrender.com", {
 });
 
 // Signup Logic
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const signupForm = document.getElementById("signup-form");
   if (signupForm) {
     signupForm.addEventListener("submit", async (e) => {
@@ -13,17 +13,24 @@ document.addEventListener("DOMContentLoaded", () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const response = await fetch("https://chatapi-wrob.onrender.com/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        window.location.href = "friends.html";
-      } else {
-        alert(data.error);
+      try {
+        const response = await fetch(
+          "https://chatapi-wrob.onrender.com/signup",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password }),
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          window.location.href = "friends.html";
+        } else {
+          alert(data.error);
+        }
+      } catch (error) {
+        console.error("Network error:", error);
+        alert("An error occurred. Please try again.");
       }
     });
   }
@@ -65,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const resultsList = document.getElementById("search-results");
       resultsList.innerHTML = "";
       users.forEach((user) => {
-        if (query === user.username) {
+        if (user.username.toLowerCase().includes(query.toLowerCase())) {
           const li = document.createElement("li");
           li.textContent = user.username;
           const addBtn = document.createElement("button");
@@ -93,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const friendRequestsList = document.getElementById("friend-requests");
 
   if (friendRequestsList) {
-    const response = fetch(
+    const response = await fetch(
       `https://chatapi-wrob.onrender.com/friend-requests/${userId}`
     );
     const friendRequests = response.json();

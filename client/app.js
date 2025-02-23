@@ -97,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `https://chatapi-wrob.onrender.com/friend-requests/${userId}`
     );
     const friendRequests = response.json();
+    console.log(friendRequests);
     friendRequestsList.innerHTML = "";
 
     friendRequests.forEach((friend) => {

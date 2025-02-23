@@ -1,81 +1,29 @@
-/* Modal background overlay */
 .modal {
   display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
-
-/* Show modal with fade in */
-.modal.show {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 1;
-}
-
-/* Modal content container */
-.modal-content {
-  background-color: #fff;
-  padding: 2rem;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  background: white;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 500px;
-  width: 90%;
-  position: relative;
-  transform: scale(0.7);
-  opacity: 0;
-  transition: all 0.3s ease-in-out;
+  text-align: center;
 }
 
-/* Modal content animation when shown */
-.modal.show .modal-content {
-  transform: scale(1);
-  opacity: 1;
+.modal-content {
+  padding: 10px;
 }
 
-/* Close button */
 .close-btn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 1.5rem;
   cursor: pointer;
-  color: #666;
-  transition: color 0.2s ease;
+  float: right;
+  font-size: 22px;
+  font-weight: bold;
 }
 
-.close-btn:hover {
-  color: #333;
-}
-
-/* Message styling */
-#popup-message {
-  margin: 0;
-  color: #333;
-  line-height: 1.5;
-}
-
-/* Animation keyframes for bouncing effect */
-@keyframes modalBounce {
-  0% {
-    transform: scale(0.3);
-  }
-  70% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* Apply bounce animation class */
-.modal.bounce .modal-content {
-  animation: modalBounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+.modal.show {
+  display: block;
 }

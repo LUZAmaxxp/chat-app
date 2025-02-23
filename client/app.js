@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const resultsList = document.getElementById("search-results");
       resultsList.innerHTML = "";
       users.forEach((user) => {
-        if (user.username.toLowerCase().includes(query.toLowerCase())) {
+        if (user.username == query) {
           const li = document.createElement("li");
           li.textContent = user.username;
           const addBtn = document.createElement("button");

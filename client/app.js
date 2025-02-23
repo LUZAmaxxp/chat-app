@@ -64,25 +64,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const resultsList = document.getElementById("search-results");
       resultsList.innerHTML = "";
-      users.forEach((user) => {
-        const li = document.createElement("li");
-        li.textContent = user.username;
-        const addBtn = document.createElement("button");
-        addBtn.textContent = "Add Friend";
-        addBtn.onclick = async () => {
-          await fetch("https://chatapi-wrob.onrender.com/add-friend", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              userId: localStorage.getItem("userId"),
-              friendId: user._id,
-            }),
-          });
-          alert("Friend request sent!");
-        };
-        li.appendChild(addBtn);
-        resultsList.appendChild(li);
-      });
+
+      const li = document.createElement("li");
+      li.textContent = user.username;
+      const addBtn = document.createElement("button");
+      addBtn.textContent = "Add Friend";
+      addBtn.onclick = async () => {
+        await fetch("https://chatapi-wrob.onrender.com/add-friend", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: localStorage.getItem("userId"),
+            friendId: user._id,
+          }),
+        });
+        alert("Friend request sent!");
+      };
+      li.appendChild(addBtn);
+      resultsList.appendChild(li);
     });
   }
 

@@ -82,18 +82,31 @@ document.addEventListener("DOMContentLoaded", async () => {
           const addBtn = document.createElement("button");
           addBtn.textContent = "Add Friend";
           addBtn.onclick = async () => {
-            await fetch("https://chatapi-wrob.onrender.com/send-request", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token
-              },
-              body: JSON.stringify({
-                senderId: localStorage.getItem("userId"),
-                receiverId: user._id,
-              }),
-            });
-            alert("Friend request sent!");
+            try {
+              const response = await fetch(
+                "https://chatapi-wrob.onrender.com/send-request",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token
+                  },
+                  body: JSON.stringify({
+                    senderId: localStorage.getItem("userId"),
+                    receiverId: user._id,
+                  }),
+                }
+              );
+              if (!response.ok) {
+                throw new Error(response.statusText);
+              } else {
+                alert("Friend request sent!");
+              }
+            } catch (error) {
+              console.error("Failed to send friend request:", error);
+              alert("Failed to send friend request.");
+              return;
+            }
           };
 
           li.appendChild(addBtn);

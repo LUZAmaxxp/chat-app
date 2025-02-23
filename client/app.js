@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem("userId", data.userId);
         window.location.href = "friends.html";
       } else {
         alert(data.error);

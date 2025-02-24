@@ -111,8 +111,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           li.appendChild(addBtn);
           resultsList.appendChild(li);
-        } else if (user.username != query) {
-          showPopup("No users found!");
         }
       });
     });

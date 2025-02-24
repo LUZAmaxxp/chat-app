@@ -52,45 +52,46 @@ async function loadFriendRequests() {
         "<li>No friend requests at this time.</li>";
       return;
     }
+    if (friendRequests.length > 0) {
+      friendRequests.forEach((friend) => {
+        const li = document.createElement("li");
+        li.textContent = friend.username;
 
-    friendRequests.forEach((friend) => {
-      const li = document.createElement("li");
-      li.textContent = friend.username;
+        const acceptBtn = document.createElement("button");
+        acceptBtn.textContent = "Accept";
+        acceptBtn.onclick = async () => {
+          try {
+            const response = await fetch(
+              "https://chatapi-wrob.onrender.com/api/accept-request",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify({ friendId: friend._id }),
+              }
+            );
 
-      const acceptBtn = document.createElement("button");
-      acceptBtn.textContent = "Accept";
-      acceptBtn.onclick = async () => {
-        try {
-          const response = await fetch(
-            "https://chatapi-wrob.onrender.com/api/accept-request",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-              body: JSON.stringify({ friendId: friend._id }),
+            if (response.ok) {
+              // Emit socket event when accepting friend request
+              socket.emit("friendRequestAccepted", { senderId: friend._id });
+              showPopup("Friend request accepted!", "success");
+              loadFriendRequests(); // Reload the list instead of full page refresh
+            } else {
+              const data = await response.json();
+              showPopup(data.error || "Failed to accept request", "error");
             }
-          );
-
-          if (response.ok) {
-            // Emit socket event when accepting friend request
-            socket.emit("friendRequestAccepted", { senderId: friend._id });
-            showPopup("Friend request accepted!", "success");
-            loadFriendRequests(); // Reload the list instead of full page refresh
-          } else {
-            const data = await response.json();
-            showPopup(data.error || "Failed to accept request", "error");
+          } catch (error) {
+            console.error("Failed to accept friend request:", error);
+            showPopup("Failed to accept friend request.", "error");
           }
-        } catch (error) {
-          console.error("Failed to accept friend request:", error);
-          showPopup("Failed to accept friend request.", "error");
-        }
-      };
+        };
 
-      li.appendChild(acceptBtn);
-      friendRequestsList.appendChild(li);
-    });
+        li.appendChild(acceptBtn);
+        friendRequestsList.appendChild(li);
+      });
+    }
   } catch (error) {
     console.error("Error loading friend requests:", error);
     showPopup("Failed to load friend requests.", "error");

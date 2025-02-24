@@ -338,7 +338,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Load Friend Requests on page load
   if (document.getElementById("friend-requests")) {
     loadFriendRequests();
   }
@@ -427,7 +426,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         chatDisplay.appendChild(div);
         chatDisplay.scrollTop = chatDisplay.scrollHeight;
       } else {
-        // If message is from someone else, show notification
         showPopup("New message from another friend!", "info");
       }
     });

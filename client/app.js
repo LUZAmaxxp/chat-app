@@ -50,7 +50,6 @@ async function loadFriendRequests() {
     if (friendRequests.length === 0) {
       friendRequestsList.innerHTML =
         "<li>No friend requests at this time.</li>";
-      return;
     }
     if (friendRequests.length > 0) {
       friendRequests.forEach((friend) => {

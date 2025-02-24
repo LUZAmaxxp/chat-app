@@ -195,7 +195,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       const query = document.getElementById("search-input").value;
       if (!query.trim()) {
         showPopup("Please enter a search term", "error");
-        return;
       }
 
       try {

@@ -45,6 +45,8 @@ async function loadFriendRequests() {
     }
 
     const friendRequests = await response.json();
+    console.log(friendRequests);
+
     friendRequestsList.innerHTML = "";
 
     if (friendRequests.length === 0) {

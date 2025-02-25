@@ -49,51 +49,51 @@ async function loadFriendRequests() {
     if (friendRequests.length === 0) {
       friendRequestsList.innerHTML =
         "<li>No friend requests at this time.</li>";
+      return;
     }
-    if (friendRequests.length > 0) {
-      friendRequests.forEach((friend) => {
-        const li = document.createElement("li");
-        li.textContent = friend.username;
 
-        const acceptBtn = document.createElement("button");
-        acceptBtn.textContent = "Accept";
-        acceptBtn.onclick = async () => {
-          try {
-            const response = await fetch(
-              "https://chatapi-wrob.onrender.com/api/accept-request",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-                body: JSON.stringify({ friendId: friend._id }),
-              }
-            );
+    friendRequests.forEach((friend) => {
+      const li = document.createElement("li");
+      li.textContent = friend.username;
 
-            if (response.ok) {
-              // Emit socket event when accepting friend request
-              socket.emit("friendRequestAccepted", {
-                senderId: friend._id,
-                receiverId: localStorage.getItem("userId"),
-              });
-              showPopup("Friend request accepted!", "success");
-              loadFriendRequests(); // Reload the list instead of full page refresh
-              loadFriendsList(); // Also reload friends list
-            } else {
-              const data = await response.json();
-              showPopup(data.error || "Failed to accept request", "error");
+      const acceptBtn = document.createElement("button");
+      acceptBtn.textContent = "Accept";
+      acceptBtn.onclick = async () => {
+        try {
+          const response = await fetch(
+            "https://chatapi-wrob.onrender.com/api/accept-request",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              body: JSON.stringify({ friendId: friend._id }),
             }
-          } catch (error) {
-            console.error("Failed to accept friend request:", error);
-            showPopup("Failed to accept friend request.", "error");
-          }
-        };
+          );
 
-        li.appendChild(acceptBtn);
-        friendRequestsList.appendChild(li);
-      });
-    }
+          if (response.ok) {
+            // Emit socket event when accepting friend request
+            socket.emit("friendRequestAccepted", {
+              senderId: friend._id,
+              receiverId: localStorage.getItem("userId"),
+            });
+            showPopup("Friend request accepted!", "success");
+            loadFriendRequests(); // Reload the list instead of full page refresh
+            loadFriendsList(); // Also reload friends list
+          } else {
+            const data = await response.json();
+            showPopup(data.error || "Failed to accept request", "error");
+          }
+        } catch (error) {
+          console.error("Failed to accept friend request:", error);
+          showPopup("Failed to accept friend request.", "error");
+        }
+      };
+
+      li.appendChild(acceptBtn);
+      friendRequestsList.appendChild(li);
+    });
   } catch (error) {
     console.error("Error loading friend requests:", error);
     showPopup("Failed to load friend requests.", "error");
@@ -121,17 +121,26 @@ function setupSocketListeners() {
     console.log("Socket disconnected");
   });
 
-  // Listen for new friend requests - UPDATED to listen for both event names
-  // to ensure compatibility with your server implementation
+  // Listen for new friend requests - listen for both event names
+  // to ensure compatibility with the server implementation
   socket.on("friendRequest", (data) => {
     console.log("New friend request received:", data);
-    showPopup("You received a new friend request!", "info");
-    loadFriendRequests();
+    showPopup(
+      `You received a friend request from ${data.senderUsername}!`,
+      "info"
+    );
+    // Reload friend requests list if on the friends page
+    if (document.getElementById("friend-requests")) {
+      loadFriendRequests();
+    }
   });
 
   socket.on("newFriendRequest", (data) => {
-    console.log("New friend request received:", data);
-    showPopup("You received a new friend request!", "info");
+    console.log("New friend request received (newFriendRequest):", data);
+    showPopup(
+      `You received a friend request from ${data.senderUsername}!`,
+      "info"
+    );
     // Reload friend requests list if on the friends page
     if (document.getElementById("friend-requests")) {
       loadFriendRequests();
@@ -141,16 +150,115 @@ function setupSocketListeners() {
   // Listen for accepted friend requests
   socket.on("friendRequestAccepted", (data) => {
     console.log("Friend request accepted:", data);
-    showPopup("Friend request accepted!", "success");
+    showPopup(
+      `${data.accepterUsername} accepted your friend request!`,
+      "success"
+    );
     // Reload friends list if available
     if (document.getElementById("friends-list")) {
       loadFriendsList();
     }
   });
 
+  // Listen for new messages
+  socket.on("newMessage", (msg) => {
+    console.log("New message received:", msg);
+
+    // Get the current chat friend ID
+    const currentChatFriendId = localStorage.getItem("chatFriendId");
+
+    // Handle message in chat display if we're in a chat and it's from the current friend
+    const chatDisplay = document.querySelector(".chat-display");
+    if (chatDisplay) {
+      // If we're in a chat with the sender or receiver of this message
+      if (
+        (msg.sender === currentChatFriendId && !msg.isSentByMe) ||
+        (msg.receiver === currentChatFriendId && msg.isSentByMe)
+      ) {
+        const div = document.createElement("div");
+        div.className = msg.isSentByMe ? "my-message" : "friend-message";
+        div.textContent = msg.text;
+        chatDisplay.appendChild(div);
+        chatDisplay.scrollTop = chatDisplay.scrollHeight;
+      } else if (!msg.isSentByMe) {
+        // It's a message from someone we're not currently chatting with
+        showPopup("New message from another friend!", "info");
+      }
+    } else if (!msg.isSentByMe) {
+      // We're not in any chat, show notification for any new message
+      showPopup("You received a new message!", "info");
+    }
+  });
+
+  // Listen for typing indicators
+  socket.on("userTyping", (data) => {
+    console.log("User typing:", data);
+    const typingIndicator = document.getElementById("typing-indicator");
+    if (
+      typingIndicator &&
+      data.userId === localStorage.getItem("chatFriendId")
+    ) {
+      typingIndicator.textContent = "Typing...";
+      typingIndicator.style.display = "block";
+    }
+  });
+
+  socket.on("userStoppedTyping", (data) => {
+    console.log("User stopped typing:", data);
+    const typingIndicator = document.getElementById("typing-indicator");
+    if (
+      typingIndicator &&
+      data.userId === localStorage.getItem("chatFriendId")
+    ) {
+      typingIndicator.style.display = "none";
+    }
+  });
+
+  // Listen for online/offline status
+  socket.on("userOnline", (data) => {
+    console.log("User online:", data);
+    updateFriendStatus(data.userId, "online");
+  });
+
+  socket.on("userOffline", (data) => {
+    console.log("User offline:", data);
+    updateFriendStatus(data.userId, "offline");
+  });
+
   // Listen for errors
   socket.on("connect_error", (error) => {
     console.error("Socket connection error:", error);
+    showPopup(
+      "Connection error. Please check your internet connection.",
+      "error"
+    );
+  });
+
+  socket.on("messageError", (data) => {
+    console.error("Message error:", data);
+    showPopup(data.error || "Failed to send message", "error");
+  });
+}
+
+// Function to update friend's online status in UI
+function updateFriendStatus(friendId, status) {
+  // Find all elements representing this friend in the friends list
+  const friendElements = document.querySelectorAll(
+    `[data-friend-id="${friendId}"]`
+  );
+
+  friendElements.forEach((element) => {
+    // Find or create the status indicator
+    let statusIndicator = element.querySelector(".status-indicator");
+    if (!statusIndicator) {
+      statusIndicator = document.createElement("span");
+      statusIndicator.className = "status-indicator";
+      element.appendChild(statusIndicator);
+    }
+
+    // Update the status
+    statusIndicator.className = `status-indicator ${status}`;
+    statusIndicator.title = status === "online" ? "Online" : "Offline";
   });
 }
 
@@ -185,7 +293,28 @@ async function loadFriendsList() {
     } else {
       friends.forEach((friend) => {
         const li = document.createElement("li");
-        li.textContent = friend.username;
+        li.setAttribute("data-friend-id", friend._id);
+
+        // Create a container for username and status
+        const userInfo = document.createElement("div");
+        userInfo.className = "friend-info";
+
+        // Username text
+        const username = document.createElement("span");
+        username.textContent = friend.username;
+        userInfo.appendChild(username);
+
+        // Status indicator
+        const statusIndicator = document.createElement("span");
+        statusIndicator.className = "status-indicator";
+        // Set initial status based on lastActive (if within last 5 minutes, consider online)
+        const isRecentlyActive =
+          new Date(friend.lastActive) > new Date(Date.now() - 5 * 60 * 1000);
+        statusIndicator.classList.add(isRecentlyActive ? "online" : "offline");
+        statusIndicator.title = isRecentlyActive ? "Online" : "Offline";
+        userInfo.appendChild(statusIndicator);
+
+        li.appendChild(userInfo);
 
         const chatBtn = document.createElement("button");
         chatBtn.textContent = "Chat";
@@ -205,9 +334,30 @@ async function loadFriendsList() {
   }
 }
 
+// Add debounce function for typing indicator
+function debounce(func, wait) {
+  let timeout;
+  return function (...args) {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   // Get token from localStorage
   const token = localStorage.getItem("token");
+
+  // Check if user is logged in, redirect if not
+  if (
+    !token &&
+    !window.location.pathname.includes("index.html") &&
+    !window.location.pathname.includes("login.html") &&
+    !window.location.pathname.includes("signup.html")
+  ) {
+    window.location.href = "index.html";
+    return;
+  }
 
   if (token) {
     // Setup socket authentication
@@ -216,6 +366,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Setup all socket event listeners
     setupSocketListeners();
+  }
+
+  // Add logout functionality
+  const logoutBtn = document.getElementById("logout-btn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("chatFriendId");
+      localStorage.removeItem("chatFriendName");
+      window.location.href = "index.html";
+    });
   }
 
   // Signup Logic
@@ -240,6 +402,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (response.ok) {
           localStorage.setItem("token", data.token); // Save token
           localStorage.setItem("userId", data.userId); // Save userId
+
+          // Setup socket after login
+          socket.auth = { token: data.token };
+          socket.connect();
+          setupSocketListeners();
+
           window.location.href = "friends.html";
         } else {
           showPopup(data.error || "Signup failed", "error");
@@ -272,6 +440,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (response.ok) {
           localStorage.setItem("token", data.token); // Save token
           localStorage.setItem("userId", data.userId); // Save userId
+
+          // Setup socket after login
+          socket.auth = { token: data.token };
+          socket.connect();
+          setupSocketListeners();
+
           window.location.href = "friends.html";
         } else {
           showPopup(data.error || "Invalid email or password", "error");
@@ -333,7 +507,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
               if (response.ok) {
                 // Emit socket event for real-time notification
-                // Updated to include sender info as well
                 socket.emit("friendRequest", {
                   receiverId: user._id,
                   senderId: localStorage.getItem("userId"),
@@ -359,6 +532,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // Load Friend Requests on page load
   if (document.getElementById("friend-requests")) {
     loadFriendRequests();
   }
@@ -375,6 +549,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     const userId = localStorage.getItem("userId");
     const friendId = localStorage.getItem("chatFriendId");
     const friendName = localStorage.getItem("chatFriendName");
+    const messageInput = document.getElementById("message-input");
+
+    // Create typing indicator element if it doesn't exist
+    if (!document.getElementById("typing-indicator")) {
+      const typingIndicator = document.createElement("div");
+      typingIndicator.id = "typing-indicator";
+      typingIndicator.className = "typing-indicator";
+      typingIndicator.style.display = "none";
+      typingIndicator.textContent = "Typing...";
+      chatDisplay.parentNode.insertBefore(
+        typingIndicator,
+        chatDisplay.nextSibling
+      );
+    }
 
     // Display friend name if available
     const friendNameElement = document.getElementById("friend-name");
@@ -399,8 +587,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         messages.forEach((msg) => {
           const div = document.createElement("div");
-          div.className =
-            msg.sender === userId ? "my-message" : "friend-message";
+          div.className = msg.isSentByMe ? "my-message" : "friend-message";
           div.textContent = msg.text;
           chatDisplay.appendChild(div);
         });
@@ -412,40 +599,44 @@ document.addEventListener("DOMContentLoaded", async () => {
       showPopup("Failed to load chat history.", "error");
     }
 
+    // Typing indicator logic
+    if (messageInput) {
+      // Setup debounced typing events
+      const emitTyping = () => {
+        socket.emit("typing", { receiver: friendId });
+      };
+
+      const emitStopTyping = debounce(() => {
+        socket.emit("stopTyping", { receiver: friendId });
+      }, 1000);
+
+      messageInput.addEventListener("input", () => {
+        emitTyping();
+        emitStopTyping();
+      });
+
+      messageInput.addEventListener("blur", () => {
+        emitStopTyping();
+      });
+    }
+
     // Send message
     chatForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const msgInput = document.getElementById("message-input");
-      const text = msgInput.value;
+      const text = messageInput.value.trim();
 
       if (text) {
+        // Emit stop typing immediately when sending
+        socket.emit("stopTyping", { receiver: friendId });
+
         socket.emit("privateMessage", {
           receiver: friendId,
           text: text,
         });
 
-        // Optimistic UI update
-        const div = document.createElement("div");
-        div.className = "my-message";
-        div.textContent = text;
-        chatDisplay.appendChild(div);
-        chatDisplay.scrollTop = chatDisplay.scrollHeight;
+        // Don't add to UI here - wait for server confirmation via newMessage event
 
-        msgInput.value = "";
-      }
-    });
-
-    socket.on("newMessage", (msg) => {
-      console.log("New message received:", msg);
-      const div = document.createElement("div");
-      div.className = msg.sender === userId ? "my-message" : "friend-message";
-      div.textContent = msg.text;
-      chatDisplay.appendChild(div);
-      chatDisplay.scrollTop = chatDisplay.scrollHeight;
-
-      // Only show popup for messages from other friends (not the current chat)
-      if (msg.sender !== friendId) {
-        showPopup("New message from another friend!", "info");
+        messageInput.value = "";
       }
     });
   }

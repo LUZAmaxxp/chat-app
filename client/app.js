@@ -392,7 +392,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     chatForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const msgInput = document.getElementById("message-input");
-      const text = msgInput.value.trim();
+      const text = msgInput.value;
 
       if (text) {
         socket.emit("privateMessage", {

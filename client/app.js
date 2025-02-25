@@ -73,9 +73,13 @@ async function loadFriendRequests() {
 
             if (response.ok) {
               // Emit socket event when accepting friend request
-              socket.emit("friendRequestAccepted", { senderId: friend._id });
+              socket.emit("friendRequestAccepted", {
+                senderId: friend._id,
+                receiverId: localStorage.getItem("userId"),
+              });
               showPopup("Friend request accepted!", "success");
               loadFriendRequests(); // Reload the list instead of full page refresh
+              loadFriendsList(); // Also reload friends list
             } else {
               const data = await response.json();
               showPopup(data.error || "Failed to accept request", "error");
@@ -101,13 +105,33 @@ function setupSocketListeners() {
   // Listen for socket connection
   socket.on("connect", () => {
     console.log("Socket connected successfully:", socket.id);
+
+    // After successful connection, emit a 'register' event with user ID
+    // This helps the server associate this socket with the user
+    if (localStorage.getItem("userId")) {
+      socket.emit("register", { userId: localStorage.getItem("userId") });
+      console.log(
+        "Registered socket with user ID:",
+        localStorage.getItem("userId")
+      );
+    }
   });
 
   socket.on("disconnect", () => {
     console.log("Socket disconnected");
   });
 
-  // Listen for new friend requests
+  // Listen for new friend requests - UPDATED to listen for both event names
+  // to ensure compatibility with your server implementation
+  socket.on("friendRequest", (data) => {
+    console.log("New friend request received:", data);
+    showPopup("You received a new friend request!", "info");
+    // Reload friend requests list if on the friends page
+    if (document.getElementById("friend-requests")) {
+      loadFriendRequests();
+    }
+  });
+
   socket.on("newFriendRequest", (data) => {
     console.log("New friend request received:", data);
     showPopup("You received a new friend request!", "info");
@@ -122,9 +146,8 @@ function setupSocketListeners() {
     console.log("Friend request accepted:", data);
     showPopup("Friend request accepted!", "success");
     // Reload friends list if available
-    const friendsList = document.getElementById("friends-list");
-    if (friendsList) {
-      loadFriendsList(); // You'll need to implement this function
+    if (document.getElementById("friends-list")) {
+      loadFriendsList();
     }
   });
 
@@ -134,7 +157,7 @@ function setupSocketListeners() {
   });
 }
 
-// Function to load friends list (implement this)
+// Function to load friends list
 async function loadFriendsList() {
   const friendsList = document.getElementById("friends-list");
   if (!friendsList) return;
@@ -313,7 +336,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
               if (response.ok) {
                 // Emit socket event for real-time notification
-                socket.emit("friendRequest", { receiverId: user._id });
+                // Updated to include sender info as well
+                socket.emit("friendRequest", {
+                  receiverId: user._id,
+                  senderId: localStorage.getItem("userId"),
+                });
                 showPopup("Friend request sent!", "success");
               } else {
                 const data = await response.json();
@@ -414,11 +441,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     socket.on("newMessage", (msg) => {
       console.log("New message received:", msg);
       const div = document.createElement("div");
-      div.className = " message ";
+      div.className = msg.sender === userId ? "my-message" : "friend-message";
       div.textContent = msg.text;
       chatDisplay.appendChild(div);
       chatDisplay.scrollTop = chatDisplay.scrollHeight;
-      showPopup("New message from another friend!", "info");
+
+      // Only show popup for messages from other friends (not the current chat)
+      if (msg.sender !== friendId) {
+        showPopup("New message from another friend!", "info");
+      }
     });
   }
 });

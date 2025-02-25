@@ -414,7 +414,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     socket.on("newMessage", (msg) => {
       console.log("New message received:", msg);
       const div = document.createElement("div");
-      div.className = msg.sender === userId ? "my-message" : "friend-message";
+      div.className = " message ";
       div.textContent = msg.text;
       chatDisplay.appendChild(div);
       chatDisplay.scrollTop = chatDisplay.scrollHeight;

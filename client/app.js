@@ -1,7 +1,4 @@
-const socket = io("https://chatapi-wrob.onrender.com", {
-  transports: ["websocket", "polling"],
-  withCredentials: true,
-});
+const socket = io("wss://chatapi-wrob.onrender.com");
 
 // Utility function to show popup messages
 function showPopup(message, type = "info") {

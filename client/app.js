@@ -126,10 +126,7 @@ function setupSocketListeners() {
   socket.on("friendRequest", (data) => {
     console.log("New friend request received:", data);
     showPopup("You received a new friend request!", "info");
-    // Reload friend requests list if on the friends page
-    if (document.getElementById("friend-requests")) {
-      loadFriendRequests();
-    }
+    loadFriendRequests();
   });
 
   socket.on("newFriendRequest", (data) => {

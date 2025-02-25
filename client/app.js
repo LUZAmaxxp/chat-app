@@ -411,20 +411,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
-    // Receive new message
     socket.on("newMessage", (msg) => {
       console.log("New message received:", msg);
-
-      // Check if we're currently chatting with the sender
-      if (msg.sender === friendId || msg.sender === userId) {
-        const div = document.createElement("div");
-        div.className = msg.sender === userId ? "my-message" : "friend-message";
-        div.textContent = msg.text;
-        chatDisplay.appendChild(div);
-        chatDisplay.scrollTop = chatDisplay.scrollHeight;
-      } else {
-        showPopup("New message from another friend!", "info");
-      }
+      const div = document.createElement("div");
+      div.className = msg.sender === userId ? "my-message" : "friend-message";
+      div.textContent = msg.text;
+      chatDisplay.appendChild(div);
+      chatDisplay.scrollTop = chatDisplay.scrollHeight;
+      showPopup("New message from another friend!", "info");
     });
   }
 });

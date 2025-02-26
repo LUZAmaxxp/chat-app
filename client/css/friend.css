@@ -11,23 +11,34 @@ body {
   background: linear-gradient(135deg, #1a1f25 0%, #292e35 100%);
   padding: 2rem;
   color: #ffffff;
-  display: grid;
-  place-items: center;
+  display: flex;
 }
 
+/* Main Container */
 .friends-container {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   padding: 2.5rem;
-  width: 90%;
+  width: 70%; /* Adjust width to leave space for sidebar */
   max-width: 1000px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   gap: 2rem;
   animation: containerFade 0.6s ease-out;
+}
+
+/* Sidebar for Friend Requests */
+.friend-requests-sidebar {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 25%; /* Fixed width for sidebar */
+  max-width: 300px; /* Optional max width */
+  margin-left: 2rem; /* Space between main container and sidebar */
 }
 
 /* Headers */
@@ -101,31 +112,6 @@ h3::after {
 
 #search-btn:active {
   transform: translateY(0);
-}
-
-/* Main Content */
-.main-content {
-  display: flex;
-  gap: 2rem;
-}
-
-/* Friend Requests Container */
-.friend-requests-container {
-  flex: 1;
-  max-width: 300px; /* Fixed width for sidebar */
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Friends List Container */
-.friends-list-container {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Search Results Container */
@@ -228,11 +214,17 @@ h3::after {
 @media (max-width: 768px) {
   body {
     padding: 1rem;
+    flex-direction: column; /* Stack elements on smaller screens */
   }
 
   .friends-container {
-    padding: 1.5rem;
-    width: 95%;
+    width: 100%; /* Full width on small screens */
+    margin-bottom: 2rem; /* Space between main container and sidebar */
+  }
+
+  .friend-requests-sidebar {
+    width: 100%; /* Full width for sidebar on small screens */
+    margin-left: 0; /* Remove left margin */
   }
 
   #search-btn {
@@ -242,15 +234,6 @@ h3::after {
   h2,
   h3 {
     font-size: 1.5rem;
-  }
-
-  .main-content {
-    flex-direction: column; /* Stack on smaller screens */
-  }
-
-  .friend-requests-container,
-  .friends-list-container {
-    max-width: 100%; /* Full width on small screens */
   }
 }
 

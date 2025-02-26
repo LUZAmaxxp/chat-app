@@ -69,6 +69,7 @@ body {
 
 .chat-display {
   flex: 1;
+  height: 90%;
   padding: 1.5rem;
   overflow-y: auto;
   background: #f9f9f9; /* Light background for contrast */

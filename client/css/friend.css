@@ -16,6 +16,7 @@ body {
 
 /* Main Container */
 .friends-container {
+  margin-top: 50px;
   background: #ffffff; /* WhatsApp chat background */
   border-radius: 10px;
   padding: 2rem;

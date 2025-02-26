@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const token = getToken();
 
     if (!token) {
-      window.location.href = "./index.html";
+      window.location.href = "../index.html";
       return;
     }
 
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (error.message.includes("401")) {
           localStorage.removeItem("token");
           localStorage.removeItem("userId");
-          window.location.href = "./index.html";
+          window.location.href = "../index.html";
         }
       });
   }
@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const token = getToken();
 
     if (!token) {
-      window.location.href = "./index.html";
+      window.location.href = "../index.html";
       return;
     }
 
@@ -253,7 +253,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const formData = new FormData(imageUploadForm);
 
     if (!token) {
-      window.location.href = "./index.html";
+      window.location.href = "../index.html";
       return;
     }
 
@@ -304,6 +304,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("logout-btn").addEventListener("click", () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
-    window.location.href = "./index.html";
+    window.location.href = "../index.html";
   });
 });

@@ -669,7 +669,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.preventDefault();
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
-    window.location.href = "./index.html";
+    window.location.href = "../index.html";
   });
 
   // Load user profile data
@@ -677,7 +677,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      window.location.href = "./index.html";
+      window.location.href = "../index.html";
       return;
     }
 

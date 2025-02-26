@@ -287,12 +287,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Add event listener for view friends button
   document.getElementById("view-friends-btn").addEventListener("click", () => {
-    window.location.href = "/friends.html";
+    window.location.href = "./friends.html";
   });
 
   // Add event listener for view requests button
   document.getElementById("view-requests-btn").addEventListener("click", () => {
-    window.location.href = "/friend-requests.html";
+    window.location.href = "./friends.html";
   });
 
   // Log out functionality

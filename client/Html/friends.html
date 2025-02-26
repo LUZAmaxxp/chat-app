@@ -11,7 +11,7 @@
   <body>
     <div class="friends-container">
       <h2>Find Friends</h2>
-      <div class="search-container">
+      <div class="search-section">
         <input
           type="text"
           id="search-input"
@@ -19,13 +19,15 @@
         />
         <button id="search-btn">Search</button>
       </div>
-      <div class="friend-requests-container">
-        <h3>Friend Requests</h3>
-        <ul id="friend-requests"></ul>
-      </div>
-      <div class="friends-list-container">
-        <h3>Your Friends</h3>
-        <ul id="friends-list"></ul>
+      <div class="content-container">
+        <div class="friend-requests-sidebar">
+          <h3>Friend Requests</h3>
+          <ul id="friend-requests"></ul>
+        </div>
+        <div class="friends-list-container">
+          <h3>Your Friends</h3>
+          <ul id="friends-list"></ul>
+        </div>
       </div>
     </div>
     <div id="popup-modal" class="popup">

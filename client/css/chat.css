@@ -69,10 +69,10 @@ body {
 
 .chat-display {
   flex: 1;
-  height: 90%;
+  height: 900px;
   padding: 1.5rem;
   overflow-y: auto;
-  background: #f9f9f9; /* Light background for contrast */
+  background: #333e35; /* Light background for contrast */
   border-radius: 0 0 16px 16px; /* Rounded corners at the bottom */
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
   position: relative; /* For positioning typing indicator */

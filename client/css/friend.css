@@ -38,7 +38,11 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   width: 25%; /* Fixed width for sidebar */
   max-width: 300px; /* Optional max width */
-  margin-left: 2rem; /* Space between main container and sidebar */
+  position: fixed; /* Fixed position for sidebar */
+  right: 2rem; /* Space from the right */
+  top: 10%; /* Space from the top */
+  height: 80%; /* Height of the sidebar */
+  overflow-y: auto; /* Scroll if content overflows */
 }
 
 /* Headers */
@@ -225,6 +229,8 @@ h3::after {
   .friend-requests-sidebar {
     width: 100%; /* Full width for sidebar on small screens */
     margin-left: 0; /* Remove left margin */
+    position: static; /* Reset position for small screens */
+    height: auto; /* Reset height for small screens */
   }
 
   #search-btn {

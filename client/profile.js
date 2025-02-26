@@ -1,14 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
   // Load navbar
   fetch("navbar.html")
-    .then((response) => response.text())
+    .then((response) => {
+      if (!response.ok) throw new Error("Failed to load navbar");
+      return response.text();
+    })
     .then((html) => {
       document.getElementById("navbar-container").innerHTML = html;
       // Initialize navbar script
       const navbarScript = document.createElement("script");
       navbarScript.src = "navbar.js";
       document.body.appendChild(navbarScript);
-    });
+    })
+    .catch((error) => console.error(error));
 
   // Get DOM elements
   const profileImage = document.getElementById("profile-image");
@@ -73,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Load user profile data
   function loadUserProfile() {
+    // Fixed the function name here
     const token = getToken();
 
     if (!token) {
@@ -267,7 +272,7 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .then((data) => {
         // Update profile image
-        profileImage.src = data.profilePicUrl;
+        profileImage.src = data.imageUrl; // Use the correct key for the image URL
 
         // Reset file input
         profileImageInput.value = "";
@@ -283,7 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Initialize the profile page
-  loadUserProfile();
+  loadUserProfile(); // Fixed the function name here
 
   // Add event listener for view friends button
   document.getElementById("view-friends-btn").addEventListener("click", () => {

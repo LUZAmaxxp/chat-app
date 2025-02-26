@@ -321,7 +321,7 @@ async function loadFriendsList() {
         chatBtn.onclick = () => {
           localStorage.setItem("chatFriendId", friend._id);
           localStorage.setItem("chatFriendName", friend.username);
-          window.location.href = "chat.html";
+          window.location.href = "./chat.html";
         };
 
         li.appendChild(chatBtn);
@@ -376,7 +376,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       localStorage.removeItem("userId");
       localStorage.removeItem("chatFriendId");
       localStorage.removeItem("chatFriendName");
-      window.location.href = "index.html";
+      window.location.href = "../index.html";
     });
   }
 
@@ -408,7 +408,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           socket.connect();
           setupSocketListeners();
 
-          window.location.href = "friends.html";
+          window.location.href = "./friends.html";
         } else {
           showPopup(data.error || "Signup failed", "error");
         }
@@ -446,7 +446,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           socket.connect();
           setupSocketListeners();
 
-          window.location.href = "friends.html";
+          window.location.href = "./Html/friends.html";
         } else {
           showPopup(data.error || "Invalid email or password", "error");
         }

@@ -31,6 +31,7 @@ body {
 }
 
 .chat-container {
+  margin-top: 30px;
   width: 100%;
   max-width: 1200px;
   height: 90vh;

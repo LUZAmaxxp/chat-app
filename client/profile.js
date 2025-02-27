@@ -243,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch("https:/chat-io-orpine.vercel.app/api/upload-profile-image", {
+    fetch("https://chat-io-orpine.vercel.app/api/upload-profile-image", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

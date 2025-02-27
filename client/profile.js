@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch(`/api/friend-requests/${userId}`, {
+    fetch(`https://chhat-io-orpine.vercel.app/api/friend-requests/${userId}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
       email: emailInput.value,
     };
 
-    fetch("/api/update-profile", {
+    fetch("https://chat-io-orpine.vercel.app/api/update-profile", {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -257,7 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch("/api/upload-profile-image", {
+    fetch("https:/chat-io-orpine.vercel.app/api/upload-profile-image", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

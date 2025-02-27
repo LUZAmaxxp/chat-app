@@ -256,53 +256,58 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-   fetch("https://chatapi-wrob.onrender.com/api/upload-profile-image", {
-  method: "POST",
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-  body: formData,
-})
-  .then((response) => {
-    if (!response.ok) {
-      return response.json().then((errorData) => {
-        throw new Error(errorData.error || "Failed to upload image");
+    fetch("https://chatapi-wrob.onrender.com/api/upload-profile-image", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((errorData) => {
+            throw new Error(errorData.error || "Failed to upload image");
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Update profile image
+        profileImage.src = data.imageUrl; // Use the correct key for the image URL
+
+        // Reset file input
+        profileImageInput.value = "";
+        fileName.textContent = "No file selected";
+
+        // Show success message
+        alert("Profile image updated successfully");
+      })
+      .catch((error) => {
+        console.error("Error uploading image:", error);
+        alert(`Failed to upload image: ${error.message}`);
       });
-    }
-    return response.json();
-  })
-  .then((data) => {
-    // Update profile image
-    profileImage.src = data.imageUrl; // Use the correct key for the image URL
 
-    // Reset file input
-    profileImageInput.value = "";
-    fileName.textContent = "No file selected";
+    loadUserProfile();
 
-    // Show success message
-    alert("Profile image updated successfully");
-  })
-  .catch((error) => {
-    console.error("Error uploading image:", error);
-    alert(`Failed to upload image: ${error.message}`);
-  });
+    // Add event listener for view friends button
+    document
+      .getElementById("view-friends-btn")
+      .addEventListener("click", () => {
+        window.location.href = "./friends.html";
+      });
 
-  loadUserProfile();
+    // Add event listener for view requests button
+    document
+      .getElementById("view-requests-btn")
+      .addEventListener("click", () => {
+        window.location.href = "./friends.html";
+      });
 
-  // Add event listener for view friends button
-  document.getElementById("view-friends-btn").addEventListener("click", () => {
-    window.location.href = "./friends.html";
-  });
-
-  // Add event listener for view requests button
-  document.getElementById("view-requests-btn").addEventListener("click", () => {
-    window.location.href = "./friends.html";
-  });
-
-  // Log out functionality
-  document.getElementById("logout-btn").addEventListener("click", () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    window.location.href = "../index.html";
+    // Log out functionality
+    document.getElementById("logout-btn").addEventListener("click", () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      window.location.href = "../index.html";
+    });
   });
 });

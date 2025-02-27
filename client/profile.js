@@ -265,15 +265,11 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then((response) => {
         if (!response.ok) {
-          return response.json().then((errorData) => {
-            throw new Error(errorData.error || "Failed to upload image");
-          });
+          throw new Error("Failed to upload image");
         }
         return response.json();
       })
       .then((data) => {
-        console.log(formData.get("profileImage"));
-
         // Update profile image
         profileImage.src = data.imageUrl; // Use the correct key for the image URL
 
@@ -286,30 +282,26 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch((error) => {
         console.error("Error uploading image:", error);
-        alert(`Failed to upload image: ${error.message}`);
+        alert("Failed to upload image");
       });
+  });
 
-    loadUserProfile();
+  loadUserProfile();
 
-    // Add event listener for view friends button
-    document
-      .getElementById("view-friends-btn")
-      .addEventListener("click", () => {
-        window.location.href = "./friends.html";
-      });
+  // Add event listener for view friends button
+  document.getElementById("view-friends-btn").addEventListener("click", () => {
+    window.location.href = "./friends.html";
+  });
 
-    // Add event listener for view requests button
-    document
-      .getElementById("view-requests-btn")
-      .addEventListener("click", () => {
-        window.location.href = "./friends.html";
-      });
+  // Add event listener for view requests button
+  document.getElementById("view-requests-btn").addEventListener("click", () => {
+    window.location.href = "./friends.html";
+  });
 
-    // Log out functionality
-    document.getElementById("logout-btn").addEventListener("click", () => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("userId");
-      window.location.href = "../index.html";
-    });
+  // Log out functionality
+  document.getElementById("logout-btn").addEventListener("click", () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    window.location.href = "../index.html";
   });
 });

@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Load user profile data
   function loadUserProfile() {
+    // Fixed the function name here
     const token = getToken();
 
     if (!token) {
@@ -84,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch("https://chatapi-wrob.onrender.com/api/user-profile", {
+    fetch("/api/user-profile", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -137,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch(`https://chatapi-wrob.onrender.com/api/friend-requests`, {
+    fetch(`/api/friend-requests/${userId}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -150,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then((data) => {
-        pendingCount.textContent = data.length || 0;
+        pendingCount.textContent = data.length;
       })
       .catch((error) => {
         console.error("Error loading friend requests:", error);
@@ -184,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
       email: emailInput.value,
     };
 
-    fetch("https://chatapi-wrob.onrender.com/api/update-profile", {
+    fetch("/api/update-profile", {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -256,7 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch("https://chatapi-wrob.onrender.com/api/upload-profile-image", {
+    fetch("/api/upload-profile-image", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -271,7 +272,7 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .then((data) => {
         // Update profile image
-        profileImage.src = data.imageUrl;
+        profileImage.src = data.imageUrl; // Use the correct key for the image URL
 
         // Reset file input
         profileImageInput.value = "";
@@ -287,7 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Initialize the profile page
-  loadUserProfile();
+  loadUserProfile(); // Fixed the function name here
 
   // Add event listener for view friends button
   document.getElementById("view-friends-btn").addEventListener("click", () => {

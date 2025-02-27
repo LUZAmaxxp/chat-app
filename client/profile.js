@@ -276,6 +276,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Error uploading image:", error);
         alert("Failed to upload image");
       });
+    loadUserProfile();
   });
   loadUserProfile();
 

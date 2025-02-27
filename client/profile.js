@@ -267,7 +267,7 @@ document.addEventListener("DOMContentLoaded", function () {
           "navbar-profile-image"
         );
         if (navbarProfileImage) {
-          navbarProfileImage.src = data.imageUrl;
+          navbarProfileImage.src = `${data.imageUrl}?t=${new Date().getTime()}`;
         }
 
         // Reset file input

@@ -256,34 +256,35 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch("https://chatapi-wrob.onrender.com/api/upload-profile-image", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to upload image");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Update profile image
-        profileImage.src = data.imageUrl; // Use the correct key for the image URL
-
-        // Reset file input
-        profileImageInput.value = "";
-        fileName.textContent = "No file selected";
-
-        // Show success message
-        alert("Profile image updated successfully");
-      })
-      .catch((error) => {
-        console.error("Error uploading image:", error);
-        alert("Failed to upload image");
+   fetch("https://chatapi-wrob.onrender.com/api/upload-profile-image", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+  body: formData,
+})
+  .then((response) => {
+    if (!response.ok) {
+      return response.json().then((errorData) => {
+        throw new Error(errorData.error || "Failed to upload image");
       });
+    }
+    return response.json();
+  })
+  .then((data) => {
+    // Update profile image
+    profileImage.src = data.imageUrl; // Use the correct key for the image URL
+
+    // Reset file input
+    profileImageInput.value = "";
+    fileName.textContent = "No file selected";
+
+    // Show success message
+    alert("Profile image updated successfully");
+  })
+  .catch((error) => {
+    console.error("Error uploading image:", error);
+    alert(`Failed to upload image: ${error.message}`);
   });
 
   loadUserProfile();

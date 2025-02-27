@@ -77,7 +77,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Load user profile data
   function loadUserProfile() {
-    // Fixed the function name here
     const token = getToken();
 
     if (!token) {
@@ -138,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch(`/api/friend-requests/${userId}`, {
+    fetch(`/api/friend-requests`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -151,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then((data) => {
-        pendingCount.textContent = data.length;
+        pendingCount.textContent = data.length || 0;
       })
       .catch((error) => {
         console.error("Error loading friend requests:", error);
@@ -272,7 +271,7 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .then((data) => {
         // Update profile image
-        profileImage.src = data.imageUrl; // Use the correct key for the image URL
+        profileImage.src = data.imageUrl;
 
         // Reset file input
         profileImageInput.value = "";
@@ -288,7 +287,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Initialize the profile page
-  loadUserProfile(); // Fixed the function name here
+  loadUserProfile();
 
   // Add event listener for view friends button
   document.getElementById("view-friends-btn").addEventListener("click", () => {

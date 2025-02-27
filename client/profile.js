@@ -1,18 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
   // Load navbar
-  fetch("navbar.html")
-    .then((response) => {
-      if (!response.ok) throw new Error("Failed to load navbar");
-      return response.text();
-    })
-    .then((html) => {
-      document.getElementById("navbar-container").innerHTML = html;
-      // Initialize navbar script
-      const navbarScript = document.createElement("script");
-      navbarScript.src = "navbar.js";
-      document.body.appendChild(navbarScript);
-    })
-    .catch((error) => console.error(error));
 
   // Get DOM elements
   const profileImage = document.getElementById("profile-image");
@@ -34,6 +21,55 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const friendCount = document.getElementById("friend-count");
   const pendingCount = document.getElementById("pending-count");
+  const token = getToken();
+
+  if (!token) {
+    window.location.href = "../index.html";
+    return;
+  }
+
+  fetch("https://chat-io-orpine.vercel.app/api/user-profile", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to load profile");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      // Update profile info
+      usernameDisplay.textContent = data.username;
+      emailDisplay.textContent = data.email;
+      createdAt.textContent = formatDate(data.createdAt);
+      lastActive.textContent = formatDate(data.lastActive);
+
+      // Save original values
+      originalUsername = data.username;
+      originalEmail = data.email;
+
+      // Update profile image
+      if (data.profilePicUrl) {
+        profileImage.src = data.profilePicUrl;
+      }
+
+      // Update friend statistics
+      friendCount.textContent = data.friends ? data.friends.length : 0;
+
+      // Fetch friend requests count
+      fetchFriendRequests();
+    })
+    .catch((error) => {
+      console.error("Error loading profile:", error);
+      if (error.message.includes("401")) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+        window.location.href = "../index.html";
+      }
+    });
 
   // Original values for form reset
   let originalUsername = "";
@@ -76,58 +112,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Load user profile data
-  function loadUserProfile() {
-    // Fixed the function name here
-    const token = getToken();
 
-    if (!token) {
-      window.location.href = "../index.html";
-      return;
-    }
-
-    fetch("https://chat-io-orpine.vercel.app/api/user-profile", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to load profile");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Update profile info
-        usernameDisplay.textContent = data.username;
-        emailDisplay.textContent = data.email;
-        createdAt.textContent = formatDate(data.createdAt);
-        lastActive.textContent = formatDate(data.lastActive);
-
-        // Save original values
-        originalUsername = data.username;
-        originalEmail = data.email;
-
-        // Update profile image
-        if (data.profilePicUrl) {
-          profileImage.src = data.profilePicUrl;
-        }
-
-        // Update friend statistics
-        friendCount.textContent = data.friends ? data.friends.length : 0;
-
-        // Fetch friend requests count
-        fetchFriendRequests();
-      })
-      .catch((error) => {
-        console.error("Error loading profile:", error);
-        if (error.message.includes("401")) {
-          localStorage.removeItem("token");
-          localStorage.removeItem("userId");
-          window.location.href = "../index.html";
-        }
-      });
-  }
+  // Fixed the function name here
 
   // Fetch friend requests
   function fetchFriendRequests() {
@@ -286,9 +272,6 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("Failed to upload image");
       });
   });
-
-  // Initialize the profile page
-  loadUserProfile(); // Fixed the function name here
 
   // Add event listener for view friends button
   document.getElementById("view-friends-btn").addEventListener("click", () => {

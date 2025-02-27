@@ -95,9 +95,8 @@ document.addEventListener("DOMContentLoaded", function () {
         originalEmail = data.email;
 
         // Update profile image
-        if (data.profilePicUrl) {
-          profileImage.src = data.profilePicUrl;
-        }
+
+        profileImage.src = data.profilePicUrl;
 
         // Update friend statistics
         friendCount.textContent = data.friends ? data.friends.length : 0;

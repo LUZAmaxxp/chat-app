@@ -256,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch("https:/chatapi-wrob.onrender.com/api/upload-profile-image", {
+    fetch("https://chatapi-wrob.onrender.com/api/upload-profile-image", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

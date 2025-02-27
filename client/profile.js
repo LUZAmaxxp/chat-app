@@ -276,6 +276,10 @@ document.addEventListener("DOMContentLoaded", function () {
         // Reset file input
         profileImageInput.value = "";
         fileName.textContent = "No file selected";
+        if (!profileImageInput.files.length) {
+          alert("Please select an image.");
+          return;
+        }
 
         // Show success message
         alert("Profile image updated successfully");

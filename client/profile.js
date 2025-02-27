@@ -200,7 +200,12 @@ document.addEventListener("DOMContentLoaded", function () {
         if (navUsername) {
           navUsername.textContent = data.username;
         }
-
+        const navbarProfileImage = document.getElementById(
+          "navbar-profile-image"
+        );
+        if (navbarProfileImage) {
+          navbarProfileImage.src = data.imageUrl; // Update the navbar image as well
+        }
         // Disable edit mode
         disableEditMode();
 

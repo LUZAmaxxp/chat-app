@@ -1,18 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
   // Load navbar
-  fetch("navbar.html")
-    .then((response) => {
-      if (!response.ok) throw new Error("Failed to load navbar");
-      return response.text();
-    })
-    .then((html) => {
-      document.getElementById("navbar-container").innerHTML = html;
-      // Initialize navbar script
-      const navbarScript = document.createElement("script");
-      navbarScript.src = "navbar.js";
-      document.body.appendChild(navbarScript);
-    })
-    .catch((error) => console.error(error));
 
   // Get DOM elements
   const profileImage = document.getElementById("profile-image");

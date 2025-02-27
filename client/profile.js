@@ -261,12 +261,8 @@ document.addEventListener("DOMContentLoaded", function () {
         profileImage.src = data.imageUrl; // Use the correct key for the image URL
 
         // Reset file input
-        profileImageInput.value = "";
+
         fileName.textContent = "No file selected";
-        if (!profileImageInput.files.length) {
-          alert("Please select an image.");
-          return;
-        }
 
         // Show success message
         alert("Profile image updated successfully");

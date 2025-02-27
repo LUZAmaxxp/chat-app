@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch("/api/user-profile", {
+    fetch("https/chat-io-orpine.vercel.app/api/user-profile", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

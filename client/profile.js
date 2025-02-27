@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch("/api/user-profile", {
+    fetch("https://chatapi-wrob.onrender.com/api/user-profile", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

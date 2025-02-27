@@ -711,3 +711,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Load profile on page load
   loadUserProfile();
 });
+document.addEventListener("DOMContentLoaded", function () {
+  // Mobile menu toggle
+  const mobileMenuButton = document.querySelector(".mobile-menu-button");
+  const navbarLinks = document.querySelector(".navbar-links");
+
+  mobileMenuButton.addEventListener("click", function () {
+    this.classList.toggle("active");
+    navbarLinks.classList.toggle("active");
+  });
+
+  // Profile dropdown toggle
+  const profileSection = document.querySelector(".profile-section");
+  const profileDropdown = document.querySelector(".profile-dropdown");
+
+  profileSection.addEventListener("click", function (event) {
+    event.stopPropagation();
+    profileDropdown.classList.toggle("active");
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener("click", function () {
+    profileDropdown.classList.remove("active");
+  });
+});

@@ -200,12 +200,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (navUsername) {
           navUsername.textContent = data.username;
         }
-        const navbarProfileImage = document.getElementById(
-          "navbar-profile-image"
-        );
-        if (navbarProfileImage) {
-          navbarProfileImage.src = data.imageUrl; // Update the navbar image as well
-        }
+
         // Disable edit mode
         disableEditMode();
 
@@ -268,7 +263,12 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .then((data) => {
         // Update profile image
-        profileImage.src = data.imageUrl;
+        const navbarProfileImage = document.getElementById(
+          "navbar-profile-image"
+        );
+        if (navbarProfileImage) {
+          navbarProfileImage.src = data.imageUrl;
+        }
 
         // Reset file input
         profileImageInput.value = "";

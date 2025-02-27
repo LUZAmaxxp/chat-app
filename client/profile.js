@@ -263,12 +263,7 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .then((data) => {
         // Update profile image
-        const navbarProfileImage = document.getElementById(
-          "navbar-profile-image"
-        );
-        if (navbarProfileImage) {
-          navbarProfileImage.src = `${data.imageUrl}?t=${new Date().getTime()}`;
-        }
+        profileImage.src = data.imageUrl;
 
         // Reset file input
         profileImageInput.value = "";

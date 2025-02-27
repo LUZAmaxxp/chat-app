@@ -243,6 +243,12 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
+    // Check if a file is selected
+    if (!profileImageInput.files.length) {
+      alert("Please select an image.");
+      return;
+    }
+
     fetch("https://chatapi-wrob.onrender.com/api/upload-profile-image", {
       method: "POST",
       headers: {
@@ -258,10 +264,10 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .then((data) => {
         // Update profile image
-        profileImage.src = data.imageUrl; // Use the correct key for the image URL
+        profileImage.src = data.imageUrl;
 
         // Reset file input
-
+        profileImageInput.value = "";
         fileName.textContent = "No file selected";
 
         // Show success message
@@ -272,7 +278,6 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("Failed to upload image");
       });
   });
-
   loadUserProfile();
 
   // Add event listener for view friends button

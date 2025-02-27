@@ -272,6 +272,8 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then((data) => {
+        console.log(formData.get("profileImage"));
+
         // Update profile image
         profileImage.src = data.imageUrl; // Use the correct key for the image URL
 

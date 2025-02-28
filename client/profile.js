@@ -259,7 +259,7 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .then((data) => {
         // Update profile image
-        profileImage.src = data.imageUrl;
+        profileImage.src = "../assets/images.png";
 
         // Reset file input
         profileImageInput.value = "";

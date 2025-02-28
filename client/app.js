@@ -696,7 +696,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       .then((data) => {
         // Update navbar profile
         document.getElementById("nav-username").textContent = data.username;
-        document.getElementById("nav-profile-image").src = data.profilePic;
+        document.getElementById("profile-image").src = data.profilePic;
       })
       .catch((error) => {
         console.error("Error loading profile:", error);

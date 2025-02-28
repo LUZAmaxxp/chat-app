@@ -681,31 +681,32 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    fetch("https://chatapi-wrob.onrender.com/api/user-profile", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to load profile");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Update navbar profile
-        document.getElementById("nav-username").textContent = data.username;
-        document.getElementById("nav-profile-image").src = data.profilePic;
-      })
-      .catch((error) => {
-        console.error("Error loading profile:", error);
-        if (error.message.includes("401")) {
-          localStorage.removeItem("token");
-          localStorage.removeItem("userId");
-          window.location.href = "../index.html";
-        }
-      });
+   fetch("https://chatapi-wrob.onrender.com/api/user-profile", {
+     method: "GET",
+     headers: {
+       Authorization: `Bearer ${token}`,
+     },
+   })
+     .then((response) => {
+       if (!response.ok) {
+         throw new Error("Failed to load profile");
+       }
+       return response.json();
+     })
+     .then((data) => {
+       console.log("Profile Data:", data); // Debugging
+       document.getElementById("nav-username").textContent = data.username;
+       document.getElementById("nav-profile-image").src =
+         data.profilePic || "path/to/default-image.jpg";
+     })
+     .catch((error) => {
+       console.error("Error loading profile:", error);
+       if (error.message.includes("401")) {
+         localStorage.removeItem("token");
+         localStorage.removeItem("userId");
+         window.location.href = "../index.html";
+       }
+     });
   }
   document.addEventListener("DOMContentLoaded", function () {
     // Mobile menu toggle

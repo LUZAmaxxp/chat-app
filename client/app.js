@@ -695,7 +695,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Profile Data:", data); // Debugging
         document.getElementById("nav-username").textContent = data.username;
         document.getElementById("nav-profile-image").src =
-          "./assets/images.png";
+          data.profilePic || "./assets/default-profile.png";
       })
       .catch((error) => {
         console.error("Error loading profile:", error);

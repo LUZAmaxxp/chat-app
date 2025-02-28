@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
         originalUsername = data.username;
         originalEmail = data.email;
 
-        profileImage.src = "../assets/images.png";
+        profileImage.src = `${data.profilePic}?${new Date().getTime()}`;
 
         friendCount.textContent = data.friends ? data.friends.length : 0;
 

@@ -93,8 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
         originalUsername = data.username;
         originalEmail = data.email;
 
-        // Update profile image
-        profileImage.src = data.profilePic;
+        profileImage.src = `${data.profilePic}?${new Date().getTime()}`;
         console.log("Profile Image Source:", profileImage.src); // Debugging
 
         friendCount.textContent = data.friends ? data.friends.length : 0;

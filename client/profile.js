@@ -90,16 +90,15 @@ document.addEventListener("DOMContentLoaded", function () {
         createdAt.textContent = formatDate(data.createdAt);
         lastActive.textContent = formatDate(data.lastActive);
 
-        // Save original values
         originalUsername = data.username;
         originalEmail = data.email;
 
+        // Update profile image
         profileImage.src = data.profilePic;
+        console.log("Profile Image Source:", profileImage.src); // Debugging
 
-        // Update friend statistics
         friendCount.textContent = data.friends ? data.friends.length : 0;
 
-        // Fetch friend requests count
         fetchFriendRequests();
       })
       .catch((error) => {

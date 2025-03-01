@@ -448,7 +448,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           showPopup(data.error || "Invalid email or password", "error");
           setTimeout(() => {
             window.location.href = "./Html/signup.html";
-          }, 3000);
+          }, 6000);
         }
       } catch (error) {
         console.error("Network error:", error);

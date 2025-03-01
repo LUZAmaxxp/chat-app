@@ -44,8 +44,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  animation: containerFade 0.8s ease-out,
-    floatContainer 6s ease-in-out infinite alternate;
+  animation: containerFade 0.8s ease-out, 6s ease-in-out infinite alternate;
   position: relative;
   z-index: 1;
   backdrop-filter: blur(10px);

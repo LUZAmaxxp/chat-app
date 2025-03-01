@@ -1,4 +1,4 @@
-import { socket, setupSocketListeners } from "./socketManager.js";
+const socket = io("wss://chatapi-wrob.onrender.com");
 
 // Utility function to show popup messages
 function showPopup(message, type = "info") {
@@ -21,7 +21,84 @@ function showPopup(message, type = "info") {
 }
 
 // Function to load friend requests
-import { loadFriendRequests } from "./friendManager.js";
+async function loadFriendRequests() {
+  const friendRequestsList = document.getElementById("friend-requests");
+  if (!friendRequestsList) return;
+
+  try {
+    const response = await fetch(
+      `https://chatapi-wrob.onrender.com/api/friend-requests/${localStorage.getItem(
+        "userId"
+      )}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch friend requests");
+    }
+
+    const friendRequests = await response.json();
+    console.log("Friend requests loaded:", friendRequests);
+
+    friendRequestsList.innerHTML = "";
+
+    if (friendRequests.length === 0) {
+      friendRequestsList.innerHTML =
+        "<li>No friend requests at this time.</li>";
+      return;
+    }
+
+    friendRequests.forEach((friend) => {
+      const li = document.createElement("li");
+      li.textContent = friend.username;
+
+      const acceptBtn = document.createElement("button");
+      acceptBtn.textContent = "Accept";
+      acceptBtn.onclick = async () => {
+        try {
+          const response = await fetch(
+            "https://chatapi-wrob.onrender.com/api/accept-request",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              body: JSON.stringify({ friendId: friend._id }),
+            }
+          );
+
+          if (response.ok) {
+            // Emit socket event when accepting friend request
+            socket.emit("friendRequestAccepted", {
+              senderId: friend._id,
+              receiverId: localStorage.getItem("userId"),
+            });
+            showPopup("Friend request accepted!", "success");
+            loadFriendRequests(); // Reload the list instead of full page refresh
+            loadFriendsList(); // Also reload friends list
+          } else {
+            const data = await response.json();
+            showPopup(data.error || "Failed to accept request", "error");
+          }
+        } catch (error) {
+          console.error("Failed to accept friend request:", error);
+          showPopup("Failed to accept friend request.", "error");
+        }
+      };
+
+      li.appendChild(acceptBtn);
+      friendRequestsList.appendChild(li);
+    });
+  } catch (error) {
+    console.error("Error loading friend requests:", error);
+    showPopup("Failed to load friend requests.", "error");
+  }
+}
 
 // Setup socket event listeners
 function setupSocketListeners() {
@@ -268,14 +345,28 @@ function debounce(func, wait) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  // Get token from localStorage
   const token = localStorage.getItem("token");
 
-  if (!token) {
+  // Check if user is logged in, redirect if not
+  if (
+    !token &&
+    !window.location.pathname.includes("index.html") &&
+    !window.location.pathname.includes("login.html") &&
+    !window.location.pathname.includes("signup.html")
+  ) {
     window.location.href = "index.html";
     return;
   }
 
-  setupSocketListeners();
+  if (token) {
+    // Setup socket authentication
+    socket.auth = { token };
+    socket.connect();
+
+    // Setup all socket event listeners
+    setupSocketListeners();
+  }
 
   // Add logout functionality
   const logoutBtn = document.getElementById("logout-btn");
@@ -441,8 +532,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  loadFriendRequests();
-  loadFriendsList();
+  // Load Friend Requests on page load
+  if (document.getElementById("friend-requests")) {
+    loadFriendRequests();
+  }
+
+  // Load Friends List on page load
+  if (document.getElementById("friends-list")) {
+    loadFriendsList();
+  }
 
   // Chat Page Logic
   const chatForm = document.getElementById("chat-form");

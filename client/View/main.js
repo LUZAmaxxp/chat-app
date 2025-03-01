@@ -3,7 +3,7 @@ import { socket, setupSocketListeners } from "./socket.js";
 import { loadFriendRequests } from "./friendRequests.js";
 import { loadFriendsList } from "./friendsList.js";
 import { loadChat } from "./chat.js";
-import { loadUserProfile } from "./userProfile.js";
+import { loadUserProfile } from "../userProfile.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");

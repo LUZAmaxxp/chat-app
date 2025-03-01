@@ -444,7 +444,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           setupSocketListeners();
 
           window.location.href = "./Html/friends.html";
-        } else {
+        } else if (response.status === 400) {
           showPopup("Invalid email or password");
         }
       } catch (error) {

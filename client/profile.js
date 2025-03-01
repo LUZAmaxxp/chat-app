@@ -1,3 +1,5 @@
+import { loadUserProfile, updateUserProfile } from "./profileManager.js";
+
 document.addEventListener("DOMContentLoaded", function () {
   const toggleEditButton = document.getElementById("toggle-edit-mode");
   const editButtons = document.getElementById("edit-buttons");
@@ -53,51 +55,29 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Load user profile data
-  function loadUserProfile() {
-    // Fixed the function name here
-    const token = getToken();
+  loadUserProfile()
+    .then((data) => {
+      // Update profile info
+      usernameDisplay.textContent = data.username;
+      emailDisplay.textContent = data.email;
+      createdAt.textContent = formatDate(data.createdAt);
+      lastActive.textContent = formatDate(data.lastActive);
 
-    if (!token) {
-      window.location.href = "../index.html";
-      return;
-    }
+      originalUsername = data.username;
+      originalEmail = data.email;
 
-    fetch("https://chatapi-wrob.onrender.com/api/user-profile", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      friendCount.textContent = data.friends ? data.friends.length : 0;
+
+      fetchFriendRequests();
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to load profile");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Update profile info
-        usernameDisplay.textContent = data.username;
-        emailDisplay.textContent = data.email;
-        createdAt.textContent = formatDate(data.createdAt);
-        lastActive.textContent = formatDate(data.lastActive);
-
-        originalUsername = data.username;
-        originalEmail = data.email;
-        // Debugging
-
-        friendCount.textContent = data.friends ? data.friends.length : 0;
-
-        fetchFriendRequests();
-      })
-      .catch((error) => {
-        console.error("Error loading profile:", error);
-        if (error.message.includes("401")) {
-          localStorage.removeItem("token");
-          localStorage.removeItem("userId");
-          window.location.href = "../index.html";
-        }
-      });
-  }
+    .catch((error) => {
+      console.error("Error loading profile:", error);
+      if (error.message.includes("401")) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+        window.location.href = "../index.html";
+      }
+    });
 
   // Fetch friend requests
   function fetchFriendRequests() {
@@ -140,62 +120,39 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Handle profile info form submission
-  profileInfoForm.addEventListener("submit", (e) => {
+  profileInfoForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-
-    const token = getToken();
-
-    if (!token) {
-      window.location.href = "../index.html";
-      return;
-    }
 
     const updatedData = {
       username: usernameInput.value,
       email: emailInput.value,
     };
 
-    fetch("https://chatapi-wrob.onrender.com/api/update-profile", {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedData),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          return response.json().then((data) => {
-            throw new Error(data.error || "Failed to update profile");
-          });
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Update display values
-        usernameDisplay.textContent = data.username;
-        emailDisplay.textContent = data.email;
+    try {
+      const data = await updateUserProfile(updatedData);
+      // Update display values
+      usernameDisplay.textContent = data.username;
+      emailDisplay.textContent = data.email;
 
-        // Update original values
-        originalUsername = data.username;
-        originalEmail = data.email;
+      // Update original values
+      originalUsername = data.username;
+      originalEmail = data.email;
 
-        // Update navbar
-        const navUsername = document.getElementById("nav-username");
-        if (navUsername) {
-          navUsername.textContent = data.username;
-        }
+      // Update navbar
+      const navUsername = document.getElementById("nav-username");
+      if (navUsername) {
+        navUsername.textContent = data.username;
+      }
 
-        // Disable edit mode
-        disableEditMode();
+      // Disable edit mode
+      disableEditMode();
 
-        // Show success message
-        alert("Profile updated successfully");
-      })
-      .catch((error) => {
-        console.error("Error updating profile:", error);
-        alert(error.message);
-      });
+      // Show success message
+      alert("Profile updated successfully");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert(error.message);
+    }
   });
 
   loadUserProfile();

@@ -445,7 +445,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           window.location.href = "./Html/friends.html";
         } else {
-          showPopup(data.error || "Invalid email or password", "error");
+          showPopup("Invalid email or password");
         }
       } catch (error) {
         console.error("Network error:", error);

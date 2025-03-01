@@ -1,12 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Load navbar
-
-  // Get DOM elements
-  const profileImage = document.getElementById("profile-image");
-  const imageUploadForm = document.getElementById("image-upload-form");
-  const profileImageInput = document.getElementById("profile-image-input");
-  const fileName = document.getElementById("file-name");
-
   const toggleEditButton = document.getElementById("toggle-edit-mode");
   const editButtons = document.getElementById("edit-buttons");
   const cancelEditButton = document.getElementById("cancel-edit");
@@ -25,7 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
   let originalUsername = "";
   let originalEmail = "";
 
-  // Auth & helper functions
   function getToken() {
     return localStorage.getItem("token");
   }
@@ -92,9 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         originalUsername = data.username;
         originalEmail = data.email;
-
-        profileImage.src = `${data.profilePic}?${new Date().getTime()}`;
-        console.log("Profile Image Source:", profileImage.src); // Debugging
+        // Debugging
 
         friendCount.textContent = data.friends ? data.friends.length : 0;
 

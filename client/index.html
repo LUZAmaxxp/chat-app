@@ -5,37 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-    <link rel="stylesheet" href="./css/styles.css" />
-    <link rel="stylesheet" href="./css/popup.css" />
+    <style></style>
   </head>
   <body>
-    <div class="login-container">
-      <h2>Login</h2>
-      <form id="login-form">
-        <input type="email" id="login-email" placeholder="Email" required />
-        <input
-          type="password"
-          id="login-password"
-          placeholder="Password"
-          required
-        />
-        <button type="submit">Login</button>
-      </form>
-      <p>Don't have an account? <a href="./Html/signup.html">Sign Up</a></p>
-    </div>
-    <div id="popup-modal" class="popup">
-      <div class="popup-content">
-        <p id="popup-message"></p>
-        <button class="popup-close">OK</button>
+    <!-- New WhatsApp-themed Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <img src="./assets/chat-logo.svg" alt="Chat App Logo" />
+      </div>
+      <div class="sidebar-text">
+        <h1 class="sidebar-title">Chat-App</h1>
+        <p class="sidebar-subtitle">Connect with friends instantly</p>
+      </div>
+      <div class="chat-bubbles">
+        <div class="bubble bubble-left">Hello there!</div>
+        <div class="bubble bubble-right">Welcome to Chat-App!</div>
       </div>
     </div>
-    <div class="intro-container">
-      <div class="logo">
-        <img src="./assets/chat-logo.svg" alt="Logo" />
+
+    <div class="main-content">
+      <div class="login-container">
+        <h2>Login</h2>
+        <form id="login-form">
+          <input type="email" id="login-email" placeholder="Email" required />
+          <input
+            type="password"
+            id="login-password"
+            placeholder="Password"
+            required
+          />
+          <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <a href="./Html/signup.html">Sign Up</a></p>
       </div>
-      <div class="logo-text">
-        <h1>Chat-App</h1>
-        <p>Chat with your friends</p>
+      <div id="popup-modal" class="popup">
+        <div class="popup-content">
+          <p id="popup-message"></p>
+          <button class="popup-close">OK</button>
+        </div>
       </div>
     </div>
 

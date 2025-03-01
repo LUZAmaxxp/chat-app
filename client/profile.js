@@ -209,69 +209,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   });
 
-  profileImageInput.addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      fileName.textContent = file.name;
-
-      const reader = new FileReader();
-
-      reader.onload = function (e) {
-        profileImage.src = "../assets/images.png";
-      };
-
-      reader.readAsDataURL(file);
-    }
-  });
-
-  // Handle profile image upload
-  imageUploadForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const token = getToken();
-    const formData = new FormData(imageUploadForm);
-
-    if (!token) {
-      window.location.href = "../index.html";
-      return;
-    }
-
-    // Check if a file is selected
-    if (!profileImageInput.files.length) {
-      alert("Please select an image.");
-      return;
-    }
-
-    fetch("https://chatapi-wrob.onrender.com/api/upload-profile-image", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to upload image");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Update profile image
-        profileImage.src = "../assets/images.png";
-
-        // Reset file input
-        profileImageInput.value = "";
-        fileName.textContent = "No file selected";
-
-        // Show success message
-        alert("Profile image updated successfully");
-      })
-      .catch((error) => {
-        console.error("Error uploading image:", error);
-        alert("Failed to upload image");
-      });
-    loadUserProfile();
-  });
   loadUserProfile();
 
   // Add event listener for view friends button

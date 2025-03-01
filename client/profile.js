@@ -209,17 +209,15 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   });
 
-  // Handle profile image selection
   profileImageInput.addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (file) {
       fileName.textContent = file.name;
 
-      // Preview the image
       const reader = new FileReader();
 
-      reader.onload = function (event) {
-        profileImage.src = event.target.result;
+      reader.onload = function (e) {
+        profileImage.src = "../assets/images.png";
       };
 
       reader.readAsDataURL(file);

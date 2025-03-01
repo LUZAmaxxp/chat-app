@@ -19,7 +19,7 @@ body {
   width: 100%;
   background-color: #128c7e; /* WhatsApp dark green */
   color: white;
-  padding: 0.8rem 2rem;
+  padding: 0.8rem 1rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -40,6 +40,7 @@ body {
   color: white;
   display: flex;
   align-items: center;
+  z-index: 1001; /* Ensure it stays above the mobile menu */
 }
 
 .navbar-brand:hover {
@@ -50,6 +51,7 @@ body {
 .navbar-links {
   display: flex;
   list-style: none;
+  margin-right: 1rem;
 }
 
 .navbar-links li {
@@ -95,6 +97,8 @@ body {
   padding: 5px 10px;
   border-radius: 20px;
   transition: background-color 0.3s ease;
+  margin-left: auto; /* Push to the right */
+  z-index: 1001; /* Ensure it stays above the mobile menu */
 }
 
 .profile-section:hover {
@@ -107,8 +111,8 @@ body {
 }
 
 .profile-image {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   margin-right: 10px;
   object-fit: cover;
@@ -143,7 +147,7 @@ body {
   transform: translateY(-10px);
   pointer-events: none;
   transition: opacity 0.3s ease, transform 0.3s ease;
-  z-index: 1000;
+  z-index: 1002;
   overflow: hidden;
 }
 
@@ -188,41 +192,48 @@ body {
   background: none;
   border: none;
   color: white;
-  font-size: 1.5rem;
   cursor: pointer;
   width: 40px;
   height: 40px;
   position: relative;
   transition: all 0.3s ease;
+  margin-right: 0.5rem;
+  z-index: 1001; /* Ensure it stays above the mobile menu */
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .mobile-menu-button span {
   display: block;
   position: absolute;
-  height: 3px;
-  width: 70%;
+  height: 2px;
+  width: 60%;
   background: white;
   border-radius: 3px;
   opacity: 1;
-  left: 15%;
+  left: 20%;
   transform: rotate(0deg);
   transition: 0.25s ease-in-out;
 }
 
 .mobile-menu-button span:nth-child(1) {
-  top: 12px;
+  top: 13px;
 }
 
 .mobile-menu-button span:nth-child(2) {
-  top: 20px;
+  top: 19px;
 }
 
 .mobile-menu-button span:nth-child(3) {
-  top: 28px;
+  top: 25px;
 }
 
 .mobile-menu-button.active span:nth-child(1) {
-  top: 20px;
+  top: 19px;
   transform: rotate(135deg);
 }
 
@@ -231,28 +242,64 @@ body {
 }
 
 .mobile-menu-button.active span:nth-child(3) {
-  top: 20px;
+  top: 19px;
   transform: rotate(-135deg);
 }
 
 /* Responsive styles with animations */
+@media (max-width: 992px) {
+  .navbar-links li {
+    margin-left: 1rem;
+  }
+
+  .profile-username {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
+  .navbar {
+    padding: 0.7rem 1rem;
+  }
+
   .mobile-menu-button {
     display: block;
+    order: 1; /* Change order for better mobile layout */
+  }
+
+  .navbar-brand {
+    order: 2;
+    flex-grow: 1;
+    justify-content: center;
+    margin-left: 0.5rem;
+  }
+
+  .profile-section {
+    order: 3;
+    margin-left: 0;
+    padding: 5px;
+  }
+
+  .profile-image {
+    width: 35px;
+    height: 35px;
+    margin-right: 0;
   }
 
   .navbar-links {
     position: fixed;
-    top: 72px;
+    top: 60px; /* Reduced from 72px to match smaller navbar */
     left: 0;
     right: 0;
     background-color: #128c7e;
     flex-direction: column;
-    padding: 1rem 0;
+    padding: 0;
+    margin: 0;
     display: none;
     opacity: 0;
     transform: translateY(-10px);
     transition: opacity 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   }
 
   .navbar-links.active {
@@ -263,11 +310,15 @@ body {
 
   .navbar-links li {
     margin: 0;
-    padding: 10px 2rem;
+    padding: 12px 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     transform: translateX(-20px);
     opacity: 0;
     transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .navbar-links li:last-child {
+    border-bottom: none;
   }
 
   .navbar-links.active li {
@@ -298,13 +349,44 @@ body {
 
   .navbar-links a {
     width: 100%;
+    font-size: 0.95rem;
+    padding: 0.3rem 0;
   }
 
   .profile-dropdown {
-    width: 100%;
-    left: 0;
+    width: 200px;
     right: 0;
-    top: auto;
-    border-radius: 0;
+    left: auto;
+    top: 55px;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+
+  .profile-image {
+    width: 32px;
+    height: 32px;
+  }
+
+  .mobile-menu-button {
+    width: 35px;
+    height: 35px;
+  }
+
+  .profile-dropdown {
+    width: 180px;
+  }
+
+  .profile-dropdown-list li {
+    padding: 10px 15px;
+    font-size: 0.9rem;
   }
 }

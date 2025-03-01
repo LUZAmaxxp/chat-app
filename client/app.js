@@ -1,26 +1,23 @@
 const socket = io("wss://chatapi-wrob.onrender.com");
 
-// Utility function to show popup messages
 function showPopup(message, type = "info") {
   const popup = document.getElementById("popup-modal");
   const messageBox = document.getElementById("popup-message");
   const closeButton = document.querySelector(".popup-close");
 
   messageBox.textContent = message;
-  popup.className = `popup show ${type}`; // Add type for styling (info, success, error)
+  popup.className = `popup show ${type}`;
 
   // Hide on button click
   closeButton.onclick = () => {
     popup.classList.remove("show");
   };
 
-  // Auto-hide after 3 seconds
   setTimeout(() => {
     popup.classList.remove("show");
   }, 3000);
 }
 
-// Function to load friend requests
 async function loadFriendRequests() {
   const friendRequestsList = document.getElementById("friend-requests");
   if (!friendRequestsList) return;

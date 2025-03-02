@@ -1,0 +1,52 @@
+# Chat Application
+
+## Description
+
+A real-time chat application that allows users to connect with friends, send messages, and manage friend requests. The application utilizes WebSockets for real-time communication and provides a user-friendly interface for managing chats and profiles.
+
+## Features
+
+- Real-time messaging with WebSocket support.
+- Send and accept friend requests.
+- User authentication and session management.
+- Dynamic loading of friends and friend requests.
+- Responsive design for mobile and desktop devices.
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/chat-app.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd chat-app
+   ```
+3. Open the `client` directory and run the application:
+   ```bash
+   open index.html
+   ```
+
+## Usage
+
+- Open the application in your web browser.
+- Sign up for a new account or log in with existing credentials.
+- Manage friend requests and start chatting with friends.
+
+## Technologies Used
+
+- HTML, CSS, JavaScript
+- WebSocket for real-time communication
+- Fetch API for handling HTTP requests
+
+## Contributing
+
+Contributions are welcome! Please submit a pull request or open an issue for any suggestions or improvements.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Thanks to the contributors and the open-source community for their support.
